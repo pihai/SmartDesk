@@ -1,6 +1,6 @@
 # Projekt SmartDesk - Proposal
 
-Heutzutage zeichnen schon viele Menschen ihr Bewegungsprofil mit einem „intelligenten“ Armband auf. Ihr Ziel ist eine bewusstere und gesündere Lebensweise. Doch was ist mit der vielen Zeit die wir fast regungslos im Büro sitzen. Hier kann ein (elektrischer) Stehtisch Abhilfe schaffen. Aber auch permanentes stehen ist auf Dauer ungesund. Darum möchten wir ein Gerät entwickeln, dass die Steh- und Sitzzeiten aufzeichnet und auf dieser Basis dem Anwender Empfehlungen und Auswertungen anbieten kann. Nachfolgend die geplanten Teilbereiche dieses Projekts.
+Heutzutage zeichnen schon viele Menschen ihr Bewegungsprofil mit einem „intelligenten“ Armband auf. Ihr Ziel ist eine bewusstere und gesündere Lebensweise. Doch was ist mit der vielen Zeit die wir fast regungslos im Büro sitzen. Hier kann ein (elektrischer) Stehtisch Abhilfe schaffen. Aber auch permanentes stehen ist auf Dauer ungesund. Darum möchten wir ein Gerät entwickeln, dass die Steh- und Sitzzeiten aufzeichnet und auf dieser Basis dem Anwender Empfehlungen und Auswertungen anbieten kann. Für die Interaktion mit dem Benutzer kommen viele neuartige Möglichkeiten in Frage. Nachfolgend die geplanten Teilbereiche dieses Projekts.
 
 ## Must-Haves
 
