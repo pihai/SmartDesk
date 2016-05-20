@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDeskClientLibrary", "SmartDeskClientLibrary\SmartDeskClientLibrary.csproj", "{E7A3F252-C720-4F2F-B12C-5BB715B0489E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Arduino", "Arduino\Arduino.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateDeviceIdentity", "CreateDeviceIdentity\CreateDeviceIdentity.csproj", "{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDeskConsoleClient", "SmartDeskConsoleClient\SmartDeskConsoleClient.csproj", "{37132014-6120-4573-82AA-345BE3B2C270}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7A3F252-C720-4F2F-B12C-5BB715B0489E}.Release|x86.Build.0 = Release|Any CPU
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Debug|x86.Build.0 = Debug|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8BB140F-A3DD-480A-B6D9-4F69F0D2F5A1}.Release|x86.Build.0 = Release|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Debug|x86.Build.0 = Debug|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Release|x86.ActiveCfg = Release|Any CPU
+		{37132014-6120-4573-82AA-345BE3B2C270}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
