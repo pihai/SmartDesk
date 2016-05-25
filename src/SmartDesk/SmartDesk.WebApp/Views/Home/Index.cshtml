@@ -1,0 +1,137 @@
+﻿@using System
+
+@model SmartDesk.WebApp.ViewModels.DashboardViewModel
+
+@{
+  ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+  <div class="col-md-6">
+    <h2>Day ratio</h2>
+    <div id="ratioChart"></div>
+  </div>
+  <div class="col-md-6">
+    <h2>Day history</h2>
+    <div id="historyChart"></div>
+  </div>
+</div>
+
+<div class="row">
+
+  Last update: <span id="lastUpdate"></span>
+
+</div>
+
+
+@section Scripts {
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+  <script>
+
+    $(document).ready(function() {
+
+      function update() {
+        $("#lastUpdate").text(new Date().toString());
+
+        $.getJSON('@Url.Action("GetDayRatio", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = "myFirstDevice"})', {}, function(data) {
+          $("#dayRatio").text(JSON.stringify(data));
+
+          var arr = new Array();
+          arr[0] = ['Standing', data.Standing];
+          arr[1] = ['Sitting', data.Sitting];
+          arr[2] = ['Inactive', data.Inactive];
+
+          var chart = {
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: 0,
+              plotShadow: false
+            },
+            plotOptions: {
+              pie: {
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '75%']
+              }
+            },
+            series: [
+              {
+                type: 'pie',
+                name: 'Browser share',
+                innerSize: '50%',
+                data: arr
+              }
+            ]
+          };
+          $('#ratioChart').highcharts(chart);
+
+
+        });
+        $.getJSON('@Url.Action("GetDayHistory", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = "myFirstDevice"})', {}, function(data) {
+          $("#dayHistory").text(JSON.stringify(data));
+
+          var inactiveData = new Array();
+          var standingData = new Array();
+          var sittingData = new Array();
+
+          for (var i = 0; i < data.length; i++) {
+
+            switch(data[i].ActivityType) {
+              case "Standing":
+                standingData.push([Date.parse(data[i].StartDate), 1]);
+                standingData.push([Date.parse(data[i].EndDate), 1]);
+                standingData.push([Date.parse(data[i].EndDate), null]);
+                break;
+              case "Sitting":
+                sittingData.push([Date.parse(data[i].StartDate), 1]);
+                sittingData.push([Date.parse(data[i].EndDate), 1]);
+                sittingData.push([Date.parse(data[i].EndDate), null]);
+                break;
+              case "Inactive":
+                inactiveData.push([Date.parse(data[i].StartDate), 1]);
+                inactiveData.push([Date.parse(data[i].EndDate), 1]);
+                inactiveData.push([Date.parse(data[i].EndDate), null]);
+                break;
+            }
+          }
+
+          $('#historyChart').highcharts({
+            chart: {
+              type: 'area'
+            },
+            xAxis: {
+              type: 'datetime',
+              tickPixelInterval: 150
+            },
+            series: [{
+              name: 'Standing',
+              data: standingData
+            }, {
+              name: 'Sitting',
+              data: sittingData
+            }, {
+              name: 'Inactive',
+              data: inactiveData
+            }]
+            //series: [{
+            //  name: 'USA',
+            //  data: [[new Date().getTime(), 1], [new Date().getTime() + 10, 1]]
+            //}, {
+            //  name: 'USSR/Russia',
+            //  data: [[new Date().getTime() + 10, 1], [new Date().getTime() + 20, 1]]
+            //}]
+          });
+
+        });
+
+      }
+
+      setInterval(update, 30000);
+      update();
+    });
+
+  </script>
+}

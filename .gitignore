@@ -237,4 +237,5 @@ _Pvt_Extensions
 
 # Keys, Connection-Strings, ...
 App.secret.config
+appsettings.secret.json
 src/SmartDesk/SmartDesk.VC.db

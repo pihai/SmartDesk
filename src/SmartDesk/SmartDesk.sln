@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateDeviceIdentity", "Cre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDeskConsoleClient", "SmartDeskConsoleClient\SmartDeskConsoleClient.csproj", "{37132014-6120-4573-82AA-345BE3B2C270}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SmartDesk.WebApp", "SmartDesk.WebApp\SmartDesk.WebApp.xproj", "{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartDesk.Storage.Tests", "SmartDesk.Storage.Tests\SmartDesk.Storage.Tests.csproj", "{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,22 @@ Global
 		{37132014-6120-4573-82AA-345BE3B2C270}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37132014-6120-4573-82AA-345BE3B2C270}.Release|x86.ActiveCfg = Release|Any CPU
 		{37132014-6120-4573-82AA-345BE3B2C270}.Release|x86.Build.0 = Release|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Debug|x86.Build.0 = Debug|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Release|x86.ActiveCfg = Release|Any CPU
+		{936CFA0E-D54F-42E0-9DCA-39B4F14777C4}.Release|x86.Build.0 = Release|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7A9A5E8-1650-4EA8-B0F8-F73B5CA7CB53}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
