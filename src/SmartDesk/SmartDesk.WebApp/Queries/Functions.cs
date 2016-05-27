@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 using SmartDesk.WebApp.Queries.Dtos;
@@ -15,6 +17,17 @@ namespace SmartDesk.WebApp.Queries {
       } while (token != null);
       return result;
     }
+
+    public static IEnumerable<TOut> Pairwise<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, TIn, TOut> selector) {
+      var previous = default(TIn);
+      using (var it = source.GetEnumerator()) {
+        if (it.MoveNext())
+          previous = it.Current;
+        while (it.MoveNext())
+          yield return selector(previous, previous = it.Current);
+      }
+      //return source.Zip(source.Skip(1), selector);
+    } 
 
     public static ActivityType GetActivityType(bool isActive, bool isSitting) {
       return isActive ? isSitting ? ActivityType.Sitting : ActivityType.Standing : ActivityType.Inactive;

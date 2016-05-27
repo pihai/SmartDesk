@@ -12,7 +12,22 @@ namespace CreateDeviceIdentity {
     static void Main(string[] args) {
       var connectionString = ConfigurationManager.AppSettings["iotCnnStr"];
       var registryManager = RegistryManager.CreateFromConnectionString(connectionString);
-      AddDeviceAsync(registryManager, "device1").Wait();
+
+      Console.WriteLine("Enter a command: (new | list)");
+
+      switch (Console.ReadLine()) {
+        case "new":
+          Console.WriteLine("Enter the device id");
+          AddDeviceAsync(registryManager, Console.ReadLine()).GetAwaiter().GetResult();
+          break;
+        case "list":
+          ListAllDevices(registryManager).GetAwaiter().GetResult();
+          break;
+        default:
+          Console.WriteLine("Unknown command");
+          break;
+      }
+
       Console.ReadLine(); 
     }
 
@@ -25,6 +40,12 @@ namespace CreateDeviceIdentity {
         device = await registryManager.GetDeviceAsync(deviceId);
       }
       Console.WriteLine("Generated device key: {0}", device.Authentication.SymmetricKey.PrimaryKey);
+    }
+
+    private static async Task ListAllDevices(RegistryManager registryManager) {
+      foreach (var device in await registryManager.GetDevicesAsync(1000)) {
+        Console.WriteLine($"{device.Id} - last active {device.LastActivityTime}");
+      }
     }
   }
 }

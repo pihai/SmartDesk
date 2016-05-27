@@ -5,5 +5,6 @@ namespace SmartDesk.WebApp.Queries.TableEntities {
     public string deviceid { get; set; }
     public long isactive { get; set; }
     public long standing { get; set; }
+    public long isonline { get; set; }
   }
 }

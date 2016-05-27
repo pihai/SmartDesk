@@ -36,7 +36,7 @@
       function update() {
         $("#lastUpdate").text(new Date().toString());
 
-        $.getJSON('@Url.Action("GetDayRatio", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = "myFirstDevice"})', {}, function(data) {
+        $.getJSON('@Url.Action("GetDayRatio", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = "1"})', {}, function(data) {
           $("#dayRatio").text(JSON.stringify(data));
 
           var arr = new Array();
@@ -70,7 +70,7 @@
 
 
         });
-        $.getJSON('@Url.Action("GetDayHistory", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = "myFirstDevice"})', {}, function(data) {
+        $.getJSON('@Url.Action("GetDayHistory", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = "1"})', {}, function(data) {
           $("#dayHistory").text(JSON.stringify(data));
 
           var inactiveData = new Array();
@@ -100,11 +100,41 @@
 
           $('#historyChart').highcharts({
             chart: {
-              type: 'area'
+              type: 'area',
+              height: 150
             },
             xAxis: {
               type: 'datetime',
-              tickPixelInterval: 150
+              tickPixelInterval: 150,
+              lineWidth: 0,
+              minorGridLineWidth: 0,
+              lineColor: 'transparent',
+              labels: { enabled: false },
+              minorTickLength: 0,
+              tickLength: 0
+            },
+            yAxis: {
+              title: '',
+              lineWidth: 0,
+              gridLineWidth: 0,
+              minorGridLineWidth: 0,
+              lineColor: 'transparent',
+              labels: { enabled: false },
+              minorTickLength: 0,
+              tickLength: 0
+            },
+            plotOptions: {
+              area: {
+                lineWidth: 0,
+                marker: {
+                  enabled: false,
+                  states: {
+                    hover: {
+                      enabled: false
+                    }
+                  }
+                }
+              }
             },
             series: [{
               name: 'Standing',
