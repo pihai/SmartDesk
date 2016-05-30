@@ -15,6 +15,8 @@ namespace SmartDesk.WebApp.Queries {
     public async Task<List<DayHistoryEntry>> Query(string deviceId, DateTime date) {
       var tableClient = Account.CreateCloudTableClient();
       var durationsClient = tableClient.GetTableReference("changes");
+
+      // query all changes between 00:00 and 23:59.59
       var minDate = date.Date;
       var maxDate = minDate.AddDays(1).AddMilliseconds(-1);
       var query =
@@ -22,9 +24,15 @@ namespace SmartDesk.WebApp.Queries {
           $"PartitionKey eq '{deviceId}' and RowKey ge '{minDate.ToString("O")}' and RowKey le '{maxDate.ToString("O")}'");
       var durations = await durationsClient.FetchRecords(query);
 
+      // query the last known event, because the current period has no end yet
+      var deviceUniqueClient = tableClient.GetTableReference("deviceunique");
+      var query2 =
+        new TableQuery<LastEventRow>().Where(
+          $"PartitionKey eq '{deviceId}' and RowKey ge 'LastEvent'");
+      var lastEvent = await deviceUniqueClient.FetchRecords(query2);
 
       var result =
-        durations
+        durations.Concat(lastEvent.Select(x => new ChangeRow { isonline = x.isonline, isactive = x.isactive, standing = x.standing, RowKey = x.Timestamp.ToString("o")}))
           .Pairwise(Tuple.Create)
           .Where(pair => pair.Item1.isonline.ToBool() && pair.Item2.isonline.ToBool())
           .Select(pair =>
@@ -34,12 +42,11 @@ namespace SmartDesk.WebApp.Queries {
               Functions.GetActivityType(
                 pair.Item1.isactive.ToBool(),
                 pair.Item1.standing.ToBool()
+                )
               )
-            )
           )
           .ToList();
       return result;
-      // TODO query event where timestmap > last change und < max day date
     }
   }
 }
