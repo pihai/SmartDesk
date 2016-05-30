@@ -239,3 +239,6 @@ _Pvt_Extensions
 App.secret.config
 appsettings.secret.json
 src/SmartDesk/SmartDesk.VC.db
+
+#bower compoenents
+**/wwwroot/lib/
