@@ -30,8 +30,8 @@ namespace SmartDesk.WebApp.Queries {
       //return source.Zip(source.Skip(1), selector);
     }
 
-    public static ActivityType GetActivityType(bool isActive, bool isSitting) {
-      return isActive ? isSitting ? ActivityType.Sitting : ActivityType.Standing : ActivityType.Inactive;
+    public static ActivityType GetActivityType(bool isActive, bool isStanding) {
+      return isActive ? isStanding ? ActivityType.Standing : ActivityType.Sitting : ActivityType.Inactive;
     }
 
     public static bool ToBool(this long x) {
