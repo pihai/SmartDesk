@@ -12,6 +12,7 @@
 /// <reference path="lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js" />
 /// <reference path="lib/metismenu/dist/metisMenu.js" />
 /// <reference path="lib/mocha/mocha.js" />
+/// <reference path="lib/moment/moment.js" />
 /// <reference path="lib/morrisjs/morris.js" />
 /// <reference path="lib/raphael/raphael.min.js" />
 /// <reference path="lib/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js" />

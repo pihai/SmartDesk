@@ -44,7 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">SmartDesk</a>
+                <a class="navbar-brand" href="/">SmartDesk</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -248,7 +248,7 @@
                             <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            <a asp-controller="Home" asp-action="Settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -266,12 +266,7 @@
         </nav>
 
          <div id="page-content">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard</h1>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
+       
              @RenderBody()
              <hr />
              <footer>

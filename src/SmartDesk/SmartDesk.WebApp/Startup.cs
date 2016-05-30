@@ -57,9 +57,12 @@ namespace SmartDesk.WebApp {
           Configuration.GetConnectionString("AzureStorage")
 
           ));
+      services.AddTransient<ISettingsService, SettingsService>();
       services.AddTransient<DayHistoryQuery, DayHistoryQuery>();
       services.AddTransient<DayRatioQuery, DayRatioQuery>();
       services.AddTransient<TotalStatsQuery, TotalStatsQuery>();
+      services.AddTransient<CurrentStatusQuery, CurrentStatusQuery>();
+
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
