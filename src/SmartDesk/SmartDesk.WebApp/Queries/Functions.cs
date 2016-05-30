@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 using SmartDesk.WebApp.Queries.Dtos;
+using System.Globalization;
 
 namespace SmartDesk.WebApp.Queries {
   public static class Functions {
@@ -27,7 +28,7 @@ namespace SmartDesk.WebApp.Queries {
           yield return selector(previous, previous = it.Current);
       }
       //return source.Zip(source.Skip(1), selector);
-    } 
+    }
 
     public static ActivityType GetActivityType(bool isActive, bool isSitting) {
       return isActive ? isSitting ? ActivityType.Sitting : ActivityType.Standing : ActivityType.Inactive;
@@ -35,6 +36,22 @@ namespace SmartDesk.WebApp.Queries {
 
     public static bool ToBool(this long x) {
       return x != 0;
+    }
+
+    public static DateTime FirstDateOfWeek(int year, int weekOfYear) {
+      DateTime jan1 = new DateTime(year, 1, 1);
+      int daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
+
+      DateTime firstThursday = jan1.AddDays(daysOffset);
+      var cal = CultureInfo.CurrentCulture.Calendar;
+      int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+
+      var weekNum = weekOfYear;
+      if (firstWeek <= 1) {
+        weekNum -= 1;
+      }
+      var result = firstThursday.AddDays(weekNum * 7);
+      return result.AddDays(-3);
     }
 
   }

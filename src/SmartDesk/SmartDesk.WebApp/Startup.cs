@@ -59,6 +59,7 @@ namespace SmartDesk.WebApp {
           ));
       services.AddTransient<DayHistoryQuery, DayHistoryQuery>();
       services.AddTransient<DayRatioQuery, DayRatioQuery>();
+      services.AddTransient<TotalStatsQuery, TotalStatsQuery>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
