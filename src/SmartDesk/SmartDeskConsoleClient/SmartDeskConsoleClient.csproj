@@ -102,6 +102,12 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartDeskClientLibrary\SmartDeskClientLibrary.csproj">
+      <Project>{E7A3F252-C720-4F2F-B12C-5BB715B0489E}</Project>
+      <Name>SmartDeskClientLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
