@@ -152,13 +152,13 @@
                 $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
                     var active= data.Standing + data.Sitting;
                     $("#active-time").text(formatTime(active));
-                    var standing = Math.ceil((data.Standing / active) * 100);
+                    var standingRatio = Math.ceil((data.Standing / active) * 100);
                     $("#standing-time").text(formatTime(data.Standing));
-                    $("#standing-ratio").text(standing + "%");
+                    $("#standing-ratio").text(standingRatio + "%");
 
                     /* gauge */
                     var standing = data.Standing;
-                    var targetStanding = @Model.StandingTarget.TotalMinutes;
+                    var targetStanding = @Model.StandingTarget.TotalSeconds;
                     var standingShare = (standing / targetStanding) * 100;
                     $('#todayGauge').highcharts({
                         chart: {
