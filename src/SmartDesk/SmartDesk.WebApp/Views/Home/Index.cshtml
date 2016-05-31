@@ -6,6 +6,15 @@
   ViewData["Title"] = "Home Page";
 }
 <div class="row">
+  <div class="col-lg-12">
+    <div class="input-group input-group-sm">
+      <span class="input-group-addon" id="day-datepicker-addon">Day</span>
+      <input type="text" class="form-control" id="day-datepicker" value="@(DateTime.Now.ToString("dd-MM-yyyy"))" aria-describedby="day-datepicker-addon">
+    </div>
+  </div>
+</div>
+
+<div class="row">
     <div class="col-lg-3 col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -94,32 +103,14 @@
         <!-- /.panel -->
     </div>
     <!-- /.col-lg-4 -->
-    <div class="col-lg-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-bar-chart-o fa-fw"></i> Daily
-                <div class="pull-right">
-                    <div style="width:150px; margin-top:-5px;">
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="day-datepicker-addon">Day</span>
-                            <input type="text" class="form-control" id="day-datepicker" value="@(DateTime.Now.ToString("dd-MM-yyyy"))" aria-describedby="day-datepicker-addon">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /.panel-heading -->
-            <div class="panel-body">
-                <div class="row">
-                    <div id="dailyRatioChart"></div>
-                </div>
-                <div class="row">
-                    <div id="dailyHistoryChart"></div>
-                </div>
-            </div>
-            <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
+  <div class="col-lg-4">
+    <div class="row">
+      <div id="dailyRatioChart"></div>
     </div>
+    <div class="row">
+      <div id="dailyHistoryChart"></div>
+    </div>
+  </div>
     <!-- /.col-lg-4 -->
     <div class="col-lg-4">
         <div class="panel panel-default">
@@ -333,7 +324,10 @@
 
                     var chart = {
                         title: {
-                            text: 'Day ratio'
+                            text: ''
+                        },
+                        exporting: {
+                          enabled: false
                         },
                         chart: {
                             plotBackgroundColor: null,
@@ -390,12 +384,15 @@
 
                     $('#dailyHistoryChart').highcharts({
                         title: {
-                            text: 'Day history'
+                            text: ''
                         },
                         chart: {
                             type: 'area',
                             height: 150
                         },
+                      exporting: {
+                        enabled: false
+                      },
                         xAxis: {
                             type: 'datetime',
                             tickPixelInterval: 150,
@@ -454,65 +451,31 @@
                     var sittingData = new Array();
                     var inactiveData = new Array();
                     for (var i = 0; i < data.length; i++) {
-
                         standingData.push(data[i].Standing);
-
                         sittingData.push(data[i].Sitting);
                         inactiveData.push(data[i].Inactive);
                     }
+                    var weekSeries = new Array();
+                    weekSeries.push({ name: 'Standing', data: standingData });
+                    weekSeries.push({ name: 'Sitting', data: sittingData });
+                    weekSeries.push({ name: 'Inactive', data: inactiveData });
 
                     $('#weeklyRatioChart').highcharts({
+                        chart: {
+                          type: 'column'
+                        },
                         title: {
-                            text: 'Week ratio'
+                            text: ''
                         },
                         xAxis: {
                             categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                         },
-                        labels: {
-                            items: [{
-                                html: 'Total week ratio',
-                                style: {
-                                    left: '50px',
-                                    top: '18px',
-                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                                }
-                            }]
+                        plotOptions: {
+                          column: {
+                            stacking: 'normal'
+                          }
                         },
-                        series: [{
-                            type: 'column',
-                            name: 'Standing',
-                            data: standingData
-                        }, {
-                            type: 'column',
-                            name: 'Sitting',
-                            data: sittingData
-                        }, {
-                            type: 'column',
-                            name: 'Inactive',
-                            data: inactiveData
-                        }, {
-                            type: 'pie',
-                            name: 'Total consumption',
-                            data: [{
-                                name: 'Standing',
-                                y: sumArr(standingData),
-                                color: Highcharts.getOptions().colors[0]
-                            }, {
-                                name: 'Sitting',
-                                y: sumArr(sittingData),
-                                color: Highcharts.getOptions().colors[1]
-                            }, {
-                                name: 'Incative',
-                                y: sumArr(inactiveData),
-                                color: Highcharts.getOptions().colors[2]
-                            }],
-                            center: [100, 80],
-                            size: 100,
-                            showInLegend: false,
-                            dataLabels: {
-                                enabled: false
-                            }
-                        }]
+                        series: weekSeries
                     });
                 });
             }
