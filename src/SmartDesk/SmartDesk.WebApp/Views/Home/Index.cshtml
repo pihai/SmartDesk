@@ -27,7 +27,7 @@
   <div class="col-lg-2 col-md-3">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div class="tile-value">3 h 25 min</div>
+        <div class="tile-value" id="standing-time""></div>
         <div class="tile-title">Standing Today</div>
       </div>
     </div>
@@ -35,7 +35,7 @@
   <div class="col-lg-2 col-md-3">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div class="tile-value">55 %</div>
+        <div class="tile-value" id="standing-ratio">55 %</div>
         <div class="tile-title">Standing Ratio</div>
       </div>
     </div>
@@ -43,440 +43,388 @@
   <div class="col-lg-2 col-md-3">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div class="tile-value">6 h 35 min</div>
+        <div class="tile-value" id="active-time">6 h 35 min</div>
         <div class="tile-title">Active Today</div>
       </div>
     </div>
   </div>
 
   <div class="col-lg-4 col-md-6">
-    <div class="panel panel-default tile">
-      <div class="panel-body" style="padding: 0">
-        <div id="dailyHistoryChart"></div>
-      </div>
-    </div>
-</div>
+    <div id="dailyHistoryChart"></div>
+  </div>
 </div>
 
-    <div class="row" style="margin-top: 20px;">
-      <div class="col-lg-4">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <i class="fa fa-bar-chart-o fa-fw"></i> Today
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-lg-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-bar-chart-o fa-fw"></i> Today
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-8">
+              <h3> Current status:</h3>
+            </div>
+            <div class="col-xs-4 " id="currentStatus"></div>
           </div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-8">
-                <h3> Current status:</h3>
-              </div>
-              <div class="col-xs-4 " id="currentStatus"></div>
-            </div>
-            <div class="row">
-              <div id="todayGauge" style="width: 100%; height: 300px; float: left"></div>
-            </div>
+          <div class="row">
+            <div id="todayGauge" style="width: 100%; height: 300px; float: left"></div>
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            Day ratio
-          </div>
-          <div class="panel-body">
+    </div>
+    <div class="col-lg-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Day ratio
+        </div>
+        <div class="panel-body">
             <div id="dailyRatioChart"></div>
-          </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <i class="fa fa-bar-chart-o fa-fw"></i> Weekly
-            <div class="pull-right">
-              <div style="width:220px; margin-top:-5px;">
-                <div class="input-group input-group-sm">
-                  <span class="input-group-addon" id="week-datepicker-addon">Week</span>
-                  <input type="text" class="form-control" id="week-datepicker" value="@(DateTime.Now.ToString("dd-MM-yyyy"))" aria-describedby="week-datepicker-addon">
-                </div>
-              </div>
-            </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-bar-chart-o fa-fw"></i> Weekly
+          <div class="pull-right">         
+                <div class="" id="week"></div>
           </div>
-          <div class="panel-body">
-            <div class="row">
-              <div id="weeklyRatioChart"></div>
-            </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div id="weeklyRatioChart"></div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="row">
+  <div class="row">
 
-      Last update: <span id="lastUpdate"></span>
+    Last update: <span id="lastUpdate"></span>
 
-    </div>
+  </div>
 
 
-    @section Scripts {
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-      <script src="https://code.highcharts.com/highcharts.js"></script>
-      <script src="https://code.highcharts.com/modules/exporting.js"></script>
-      <script src="https://code.highcharts.com/highcharts-more.js"></script>
+@section Scripts {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
 
-      <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
 
-      <script>
+    <script>
 
         $(document).ready(function() {
-          moment.locale('en', {
-            week: { dow: 1 } // Monday is the first day of the week
-          });
-
-          function updateToday() {
-            $("#lastUpdate").text(moment().day(1).format("DD-MM-YYYY HH:mm:ss"));
-
-            $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
-              $("#online").toggle(data.Online);
-              $("#offline").toggle(!data.Online);
-            });
-            $.getJSON('@Url.Action("GetDayRatio", "Api", new {year = DateTime.Now.Year, month = DateTime.Now.Month, day = DateTime.Now.Day, deviceid = Model.DeviceId})', {}, function(data) {
-
-
-              var standing = data.Standing;
-              var targetStanding = @Model.StandingTarget.TotalMinutes;
-              var standingShare = (standing / targetStanding) * 100;
-              $('#todayGauge').highcharts({
-                chart: {
-                  type: 'solidgauge'
-                },
-
-                title: null,
-
-                pane: {
-                  center: ['50%', '85%'],
-                  size: '150%',
-                  startAngle: -90,
-                  endAngle: 90,
-                  background: {
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
-                    innerRadius: '60%',
-                    outerRadius: '100%',
-                    shape: 'arc'
-                  }
-                },
-
-                tooltip: {
-                  enabled: false
-                },
-
-                // the value axis
-                yAxis: {
-                  stops: [
-                    [0.1, '#DF5353'], // red
-                    [0.5, '#DDDF0D'], // yellow
-                    [0.9, '#55BF3B'] // green
-                  ],
-                  lineWidth: 0,
-                  minorTickInterval: null,
-                  tickPixelInterval: 400,
-                  tickWidth: 0,
-                  labels: {
-                    y: 16
-                  },
-                  min: 0,
-                  max: standingShare > 100 ? standingShare : 100,
-                  title: {
-                    text: 'Standing duration share',
-                    y: 20
-                  }
-                },
-
-                plotOptions: {
-                  solidgauge: {
-                    dataLabels: {
-                      y: 5,
-                      borderWidth: 0,
-                      useHTML: true
-                    }
-                  }
-                },
-
-
-                credits: {
-                  enabled: false
-                },
-
-                series: [
-                  {
-                    name: 'Duration',
-                    data: [standingShare],
-                    dataLabels: {
-                      format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y} %</span><br/>' +
-                        '<span style="font-size:12px;color:silver">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + '</span></div>'
-                    },
-                    tooltip: {
-                      valueSuffix: ' %'
-                    }
-                  }
-                ]
-
-              });
-
-
+            moment.locale('en', {
+                week: { dow: 1 } // Monday is the first day of the week
             });
 
-          }
-
-          function updateTotal() {
-
-
-            $.getJSON('@Url.Action("GetTotalStats", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
-              $("#total-active").text(formatTime(data.Active));
-              var standing = Math.ceil((data.Standing / data.Active) * 100);
-              var sitting = 100 - standing;
-              $("#standing-sitting-ratio").text(standing + "% " + sitting + "%");
-
-
+            // init datepickers
+            var dayDatepicker = $('#day-datepicker').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayBtn: true,
+                endDate: "0d",
+                weekStart: 1
             });
-          }
-
-          // init datepickers
-          var dayDatepicker = $('#day-datepicker').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayBtn: true,
-            endDate: "0d",
-            weekStart: 1
-          });
-          dayDatepicker.on("changeDate", function(e) {
-            updateDaily(); // update charts on change
-          });
-          var weekDatepicker = $('#week-datepicker').datepicker({
-            format: "dd-mm-yyyy",
-            todayBtn: true,
-            autoclose: true,
-            endDate: "0d",
-            weekStart: 1,
-            forceParse: false,
-            container: "#wrapper"
-          });
-
-          weekDatepicker.on("changeDate", function(e) {
-
-            updateWeekly(); // update charts on change
-            setWeekDate();
-          });
-
-          setWeekDate();
-
-          function setWeekDate() {
-            var value = $("#week-datepicker").val();
-            var firstDate = moment(value, "DD-MM-YYYY").day(1).format("DD-MM-YYYY");
-            var lastDate = moment(value, "DD-MM-YYYY").day(7).format("DD-MM-YYYY");
-            weekDatepicker.val(firstDate + " - " + lastDate);
-
-          }
-
-          function updateDaily() {
-            var date = dayDatepicker.datepicker("getDate");
-
-
-            $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
-              $("#dayRatio").text(JSON.stringify(data));
-
-              var arr = new Array();
-              arr[0] = ['Standing', data.Standing];
-              arr[1] = ['Sitting', data.Sitting];
-              arr[2] = ['Inactive', data.Inactive];
-
-              var chart = {
-                title: {
-                  text: ''
-                },
-                exporting: {
-                  enabled: false
-                },
-                chart: {
-                  plotBackgroundColor: null,
-                  plotBorderWidth: 0,
-                  plotShadow: false
-                },
-                plotOptions: {
-                  pie: {
-                    startAngle: -90,
-                    endAngle: 90,
-                    center: ['50%', '75%']
-                  }
-                },
-                series: [
-                  {
-                    type: 'pie',
-                    name: 'Share',
-                    innerSize: '50%',
-                    data: arr
-                  }
-                ]
-              };
-              $('#dailyRatioChart').highcharts(chart);
-
-
+            dayDatepicker.on("changeDate", function(e) {
+                updateData(); // update charts on change
             });
-            $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
-              $("#dayHistory").text(JSON.stringify(data));
 
-              var inactiveData = new Array();
-              var standingData = new Array();
-              var sittingData = new Array();
+            function updateStatus() {
+                $("#lastUpdate").text(moment().day(1).format("DD-MM-YYYY HH:mm:ss"));
 
-              for (var i = 0; i < data.length; i++) {
+                $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
+                    $("#online").toggle(data.Online);
+                    $("#offline").toggle(!data.Online);
+                });
+            }
 
-                switch (data[i].ActivityType) {
-                  case "Standing":
-                    standingData.push([Date.parse(data[i].StartDate), 1]);
-                    standingData.push([Date.parse(data[i].EndDate), 1]);
-                    standingData.push([Date.parse(data[i].EndDate), null]);
-                    break;
-                  case "Sitting":
-                    sittingData.push([Date.parse(data[i].StartDate), 1]);
-                    sittingData.push([Date.parse(data[i].EndDate), 1]);
-                    sittingData.push([Date.parse(data[i].EndDate), null]);
-                    break;
-                  case "Inactive":
-                    inactiveData.push([Date.parse(data[i].StartDate), 1]);
-                    inactiveData.push([Date.parse(data[i].EndDate), 1]);
-                    inactiveData.push([Date.parse(data[i].EndDate), null]);
-                    break;
-                }
-              }
+            function updateData() {
+                var date = dayDatepicker.datepicker("getDate");
 
-              $('#dailyHistoryChart').highcharts({
-                title: {
-                  text: 'Today', margin: 0, align: "left"
-                },
-                chart: {
-                  type: 'area',
-                  height: 97,
-                  spacingBottom: 0,
-                  //marginBottom: 0,
-                  marginTop: 0
-                },
-                exporting: {
-                  enabled: false
-                },
-                xAxis: {
-                  type: 'datetime',
-                  tickPixelInterval: 150,
-                  //lineWidth: 0,
-                  //minorGridLineWidth: 0,
-                  //lineColor: 'transparent',
-                  //labels: { enabled: false },
-                  //minorTickLength: 0,
-                  //tickLength: 0
-                },
-                yAxis: {
-                  title: '',
-                  lineWidth: 0,
-                  gridLineWidth: 0,
-                  minorGridLineWidth: 0,
-                  lineColor: 'transparent',
-                  labels: { enabled: false },
-                  minorTickLength: 0,
-                  tickLength: 0
-                },
-                plotOptions: {
-                  area: {
-                    lineWidth: 0,
-                    marker: {
-                      enabled: false,
-                      states: {
-                        hover: {
-                          enabled: false
+
+                $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
+                    var active= data.Standing + data.Sitting;
+                    $("#active-time").text(formatTime(active));
+                    var standing = Math.ceil((data.Standing / active) * 100);
+                    $("#standing-time").text(formatTime(data.Standing));
+                    $("#standing-ratio").text(standing + "%");
+
+                    /* gauge */
+                    var standing = data.Standing;
+                    var targetStanding = @Model.StandingTarget.TotalMinutes;
+                    var standingShare = (standing / targetStanding) * 100;
+                    $('#todayGauge').highcharts({
+                        chart: {
+                            type: 'solidgauge'
+                        },
+
+                        title: null,
+
+                        pane: {
+                            center: ['50%', '85%'],
+                            size: '150%',
+                            startAngle: -90,
+                            endAngle: 90,
+                            background: {
+                                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+                                innerRadius: '60%',
+                                outerRadius: '100%',
+                                shape: 'arc'
+                            }
+                        },
+
+                        tooltip: {
+                            enabled: false
+                        },
+
+                        // the value axis
+                        yAxis: {
+                            stops: [
+                              [0.1, '#DF5353'], // red
+                              [0.5, '#DDDF0D'], // yellow
+                              [0.9, '#55BF3B'] // green
+                            ],
+                            lineWidth: 0,
+                            minorTickInterval: null,
+                            tickPixelInterval: 400,
+                            tickWidth: 0,
+                            labels: {
+                                y: 16
+                            },
+                            min: 0,
+                            max: standingShare > 100 ? standingShare : 100,
+                            title: {
+                                text: 'Standing duration share',
+                                y: 20
+                            }
+                        },
+
+                        plotOptions: {
+                            solidgauge: {
+                                dataLabels: {
+                                    y: 5,
+                                    borderWidth: 0,
+                                    useHTML: true
+                                }
+                            }
+                        },
+
+
+                        credits: {
+                            enabled: false
+                        },
+
+                        series: [
+                          {
+                              name: 'Duration',
+                              data: [standingShare],
+                              dataLabels: {
+                                  format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">'+Math.round(standingShare)+' %</span><br/>' +
+                                    '<span style="font-size:12px;color:silver">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + '</span></div>'
+                              },
+                              tooltip: {
+                                  valueSuffix: ' %'
+                              }
+                          }
+                        ]
+
+                    });
+                    /* ratio */
+                    var arr = new Array();
+                    arr[0] = ['Standing', data.Standing];
+                    arr[1] = ['Sitting', data.Sitting];
+                    arr[2] = ['Inactive', data.Inactive];
+
+                    var chart = {
+                        title: {
+                            text: ''
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: 0,
+                            plotShadow: false
+                        },
+                        plotOptions: {
+                            pie: {
+                                startAngle: -90,
+                                endAngle: 90,
+                                center: ['50%', '75%']
+                            }
+                        },
+                        series: [
+                          {
+                              type: 'pie',
+                              name: 'Share',
+                              innerSize: '50%',
+                              data: arr
+                          }
+                        ]
+                    };
+                    $('#dailyRatioChart').highcharts(chart);
+
+
+                });
+                /* history */
+                $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
+                    $("#dayHistory").text(JSON.stringify(data));
+
+                    var inactiveData = new Array();
+                    var standingData = new Array();
+                    var sittingData = new Array();
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        switch (data[i].ActivityType) {
+                            case "Standing":
+                                standingData.push([Date.parse(data[i].StartDate), 1]);
+                                standingData.push([Date.parse(data[i].EndDate), 1]);
+                                standingData.push([Date.parse(data[i].EndDate), null]);
+                                break;
+                            case "Sitting":
+                                sittingData.push([Date.parse(data[i].StartDate), 1]);
+                                sittingData.push([Date.parse(data[i].EndDate), 1]);
+                                sittingData.push([Date.parse(data[i].EndDate), null]);
+                                break;
+                            case "Inactive":
+                                inactiveData.push([Date.parse(data[i].StartDate), 1]);
+                                inactiveData.push([Date.parse(data[i].EndDate), 1]);
+                                inactiveData.push([Date.parse(data[i].EndDate), null]);
+                                break;
                         }
-                      }
                     }
-                  }
-                },
-                legend: {
-                  enabled: false
-                },
-                series: [
-                  {
-                    name: 'Standing',
-                    data: standingData
-                  }, {
-                    name: 'Sitting',
-                    data: sittingData
-                  }, {
-                    name: 'Inactive',
-                    data: inactiveData
-                  }
-                ]
 
-              });
+                    $('#dailyHistoryChart').highcharts({
+                        title: {
+                            text: 'Today', margin: 0, align: "left"
+                        },
+                        chart: {
+                            type: 'area',
+                            height: 97
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        xAxis: {
+                            type: 'datetime',
+                            tickPixelInterval: 150,
+                            //lineWidth: 0,
+                            //minorGridLineWidth: 0,
+                            //lineColor: 'transparent',
+                            //labels: { enabled: false },
+                            //minorTickLength: 0,
+                            //tickLength: 0
+                        },
+                        yAxis: {
+                            title: '',
+                            lineWidth: 0,
+                            gridLineWidth: 0,
+                            minorGridLineWidth: 0,
+                            lineColor: 'transparent',
+                            labels: { enabled: false },
+                            minorTickLength: 0,
+                            tickLength: 0
+                        },
+                        plotOptions: {
+                            area: {
+                                lineWidth: 0,
+                                marker: {
+                                    enabled: false,
+                                    states: {
+                                        hover: {
+                                            enabled: false
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        series: [
+                          {
+                              name: 'Standing',
+                              data: standingData
+                          }, {
+                              name: 'Sitting',
+                              data: sittingData
+                          }, {
+                              name: 'Inactive',
+                              data: inactiveData
+                          }
+                        ]
 
-            });
+                    });
 
-          }
+                });
 
-          function updateWeekly() {
-            var date = weekDatepicker.datepicker("getDate");
-            $.getJSON(buildDateUrl('@Url.Action("GetWeekRatio", "Api", new {year = "year", week = "week", deviceid = Model.DeviceId})', date), {}, function(data) {
+                /* weekly data */
 
 
-              var standingData = new Array();
-              var sittingData = new Array();
-              var inactiveData = new Array();
-              for (var i = 0; i < data.length; i++) {
-                standingData.push(data[i].Standing);
-                sittingData.push(data[i].Sitting);
-                inactiveData.push(data[i].Inactive);
-              }
-              var weekSeries = new Array();
-              weekSeries.push({ name: 'Standing', data: standingData });
-              weekSeries.push({ name: 'Sitting', data: sittingData });
-              weekSeries.push({ name: 'Inactive', data: inactiveData });
-
-              $('#weeklyRatioChart').highcharts({
-                chart: {
-                  type: 'column'
-                },
-                title: {
-                  text: ''
-                },
-                xAxis: {
-                  categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                plotOptions: {
-                  column: {
-                    stacking: 'normal'
-                  }
-                },
-                series: weekSeries
-              });
-            });
-          }
+                var firstDate = moment(date).day(1).format("DD-MM-YYYY");
+                var lastDate = moment(date).day(7).format("DD-MM-YYYY");
+                $("#week").text(firstDate + " - " + lastDate);
+                $.getJSON(buildDateUrl('@Url.Action("GetWeekRatio", "Api", new {year = "year", week = "week", deviceid = Model.DeviceId})', date), {}, function(data) {
 
 
-          setInterval(function() {
+                    var standingData = new Array();
+                    var sittingData = new Array();
+                    var inactiveData = new Array();
+                    for (var i = 0; i < data.length; i++) {
+                        standingData.push(data[i].Standing);
+                        sittingData.push(data[i].Sitting);
+                        inactiveData.push(data[i].Inactive);
+                    }
+                    var weekSeries = new Array();
+                    weekSeries.push({ name: 'Standing', data: standingData });
+                    weekSeries.push({ name: 'Sitting', data: sittingData });
+                    weekSeries.push({ name: 'Inactive', data: inactiveData });
 
-            updateToday();
-            // todo - only update when it's the current day/week
-            updateDaily();
-            updateWeekly();
-            updateTotal();
+                    $('#weeklyRatioChart').highcharts({
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal'
+                            }
+                        },
+                        series: weekSeries
+                    });
+                });
 
-          }, 30000);
-          updateDaily();
-          updateWeekly();
-          updateToday();
-          updateTotal();
+            }
 
-          function buildDateUrl(url, date) {
-            return url.replace("year", date.getFullYear()).replace("month", (date.getMonth() + 1)).replace("day", date.getDate()).replace("week", date.getWeek() - 1);
-          }
+
+            setInterval(function() {
+                updateStatus();
+                // todo - only update data when it's the current day/week
+                updateData();              
+            }, 30000);
+
+            updateData();
+            updateStatus();
+
+            function buildDateUrl(url, date) {
+                return url.replace("year", date.getFullYear()).replace("month", (date.getMonth() + 1)).replace("day", date.getDate()).replace("week", date.getWeek() - 1);
+            }
         });
 
-      </script>
-    }
+    </script>
+}
