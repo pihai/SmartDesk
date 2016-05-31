@@ -16,25 +16,29 @@ namespace SimulatedDevice {
 
     static void Main(string[] args) {
       Console.WriteLine("Simulated device");
-      _deviceClient = DeviceClient.Create(IotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey("device1", DeviceKey));
+      _deviceClient = CreateDeviceClient();
 
-      Task.Run(async () => {
-        DeviceClient.Create(IotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey("device2", HeartBeatKey));
-        while (true) {
-          await SendTelemetryMessage(0, false, 2);
-          await Task.Delay(TimeSpan.FromMinutes(1));
-        }
-      });
+      //Task.Run(async () => {
+      //  DeviceClient.Create(IotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey("device2", HeartBeatKey));
+      //  while (true) {
+      //    await SendTelemetryMessage(0, false, 2);
+      //    await Task.Delay(TimeSpan.FromMinutes(1));
+      //  }
+      //});
 
 
-      Foo().GetAwaiter().GetResult();
+      //Foo().GetAwaiter().GetResult();
 
       Console.WriteLine("done");
-      //SendDeviceToCloudMessagesAsync();
+      SendDeviceToCloudMessagesAsync();
       //Foo();
 
 
       Console.ReadLine();
+    }
+
+    private static DeviceClient CreateDeviceClient() {
+      return DeviceClient.Create(IotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey("device1", DeviceKey));
     }
 
     private static async Task Foo() {
@@ -179,8 +183,14 @@ namespace SimulatedDevice {
         await _deviceClient.SendEventAsync(message);
       }
       catch (Exception e) {
+        try {
+          await _deviceClient.CloseAsync();
+        }
+        catch {
+        }
         Console.WriteLine(e);
         await Task.Delay(30000);
+        _deviceClient = CreateDeviceClient();
         Console.WriteLine("retry");
         await _deviceClient.SendEventAsync(message);
       }
