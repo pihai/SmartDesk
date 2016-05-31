@@ -152,7 +152,7 @@
                 $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
                     var active= data.Standing + data.Sitting;
                     $("#active-time").text(formatTime(active));
-                    var standingRatio = Math.ceil((data.Standing / active) * 100);
+                    var standingRatio = active ==0 ? 0 : Math.ceil((data.Standing / active) * 100);
                     $("#standing-time").text(formatTime(data.Standing));
                     $("#standing-ratio").text(standingRatio + "%");
 
