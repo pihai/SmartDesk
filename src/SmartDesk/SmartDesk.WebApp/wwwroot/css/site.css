@@ -43,3 +43,17 @@ textarea {
     display: none
   }
 }
+
+.tile {
+  text-align: center;
+}
+
+.tile-value {
+  font-size: 32px; 
+  font-weight: bold;
+}
+
+.tile-title {
+  font-size: 16px;
+  font-style: italic;
+}
