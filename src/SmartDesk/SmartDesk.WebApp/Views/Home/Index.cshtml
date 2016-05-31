@@ -91,7 +91,7 @@
                     </div>
                     <div class="col-xs-4 " id="currentStatus"></div>
                 </div>
-                <div class="row" >
+                <div class="row">
                     <div id="todayGauge" style="width: 100%; height: 300px; float: left"></div>
                 </div>
             </div>
@@ -151,7 +151,7 @@
         <!-- /.panel -->
     </div>
     <!-- /.col-lg-4 -->
-    
+
 </div>
 <!-- /.row -->
 
@@ -185,8 +185,8 @@
 
                 $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function (data) {
 
-                    if(data.Online == false)
-                        $('#currentStatus').html('<h3> <span  class="label label-success">ONLINE</span></h3><div><span class="label label-default"> '+(data.Active? 'Active' : 'Inactive')+'  & '+data.ActivityType+'</span></div><br/>');
+                    if(data.Online == true)
+                        $('#currentStatus').html('<h3> <span  class="label label-success">ONLINE</span></h3><div><span class="label label-default"> '+(data.Active? 'Active & '+data.ActivityType : 'Inactive')+'</span></div><br/>');
                     else
                         $('#currentStatus').html('<h3> <span  class="label label-danger">OFFLINE</span></h3><br/>');
 
@@ -232,12 +232,15 @@
                             lineWidth: 0,
                             minorTickInterval: null,
                             tickPixelInterval: 400,
-                            tickWidth: 0,
-                            title: {
-                                y: -100
-                            },
+                            tickWidth: 0,                         
                             labels: {
                                 y: 16
+                            },
+                            min: 0,
+                            max: standingShare>100?standingShare:100,
+                            title: {
+                                text: 'Standing duration share',
+                                y: 20
                             }
                         },
 
@@ -250,13 +253,7 @@
                                 }
                             }
                         },
-                        yAxis: {
-                            min: 0,
-                            max: standingShare>100?standingShare:100,
-                            title: {
-                                text: 'Standing duration share'
-                            }
-                        },
+
 
                         credits: {
                             enabled: false
@@ -330,7 +327,7 @@
             }
             function updateDaily() {
                 var date = dayDatepicker.datepicker("getDate");
-              
+
 
                 $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function (data) {
                     $("#dayRatio").text(JSON.stringify(data));
@@ -526,9 +523,9 @@
                 });
             }
 
- 
+
             setInterval(function() {
-             
+
                 updateToday();
                 // todo - only update when it's the current day/week
                 updateDaily();
