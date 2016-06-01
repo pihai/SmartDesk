@@ -15,5 +15,5 @@ function formatTime(val) {
 
     if (minutes < 10) { minutes = "0" + minutes; }
     if (seconds < 10) { seconds = "0" + seconds; }
-    return hours + "h " + minutes + "m " /*+ seconds + "s"*/;
+    return hours + "<small> h</small> " + minutes + "<small> m</small> " /*+ seconds + "s"*/;
 }

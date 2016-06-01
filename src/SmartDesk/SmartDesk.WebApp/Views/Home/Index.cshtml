@@ -6,20 +6,27 @@
   ViewData["Title"] = "Home Page";
 }
 <div class="row">
-  <div class="col-lg-12">
-    <div class="input-group input-group-sm">
-      <span class="input-group-addon" id="day-datepicker-addon">Date</span>
-      <input type="text" class="form-control" style="width: 100px" id="day-datepicker" value="@(DateTime.Now.ToString("dd-MM-yyyy"))" aria-describedby="day-datepicker-addon">
+    <div class="col-lg-12">
+        <div class="form-inline">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="day-datepicker-addon">Date</span>
+                <input type="text" class="form-control" style="width: 100px" id="day-datepicker" value="@(DateTime.Now.ToString("dd-MM-yyyy"))" aria-describedby="day-datepicker-addon">
+            </div>
+            <div class="input-group input-group-sm">
+                <div class="last-update">
+                    Last update: <span id="lastUpdate"></span>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="row" style="margin-top: 20px">
   <div class="col-lg-2 col-md-3">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div id="offline" class="tile-value" style="color: red; display: none">Offline</div>
-        <div id="online" class="tile-value" style="color: green; display: none">Online</div>
+        <div id="offline" class="tile-value" style="color: #FF6C39; display: none">Offline</div>
+        <div id="online" class="tile-value" style="color: #98E000; display: none">Online</div>
         <div class="tile-title">Status</div>
       </div>
     </div>
@@ -58,7 +65,7 @@
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <i class="fa fa-bar-chart-o fa-fw"></i> Today
+          <i class="fa fa-circle-o-notch fa-fw"></i> Today
         </div>
         <div class="panel-body">
           <div class="row">
@@ -76,7 +83,7 @@
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
-          Day ratio
+            <i class="fa fa-pie-chart fa-fw"></i>Day ratio
         </div>
         <div class="panel-body">
             <div id="dailyRatioChart"></div>
@@ -86,7 +93,7 @@
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <i class="fa fa-bar-chart-o fa-fw"></i> Weekly
+          <i class="fa fa-bar-chart fa-fw"></i> Weekly
           <div class="pull-right">         
                 <div class="" id="week"></div>
           </div>
@@ -100,11 +107,7 @@
     </div>
   </div>
 
-  <div class="row">
-
-    Last update: <span id="lastUpdate"></span>
-
-  </div>
+ 
 
 
 @section Scripts {
@@ -124,6 +127,51 @@
                 week: { dow: 1 } // Monday is the first day of the week
             });
 
+            /* styling highchart */
+            Highcharts.theme = {
+               /* colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+                         '#FF9655', '#FFF263', '#6AF9C4'],*/
+                colors: ['#98E000', // green
+                         '#FEC900', // yellow
+                         '#FF6C39', // orange/red
+                         '#2A97FF'  // blue
+                ],
+                chart: {
+                    backgroundColor: {
+                        linearGradient: [0, 0, 500, 500],
+                        stops: [
+                            [0, 'rgb(255, 255, 255)'],
+                            [1, 'rgb(240, 240, 255)']
+                        ]
+                    },
+                },
+                title: {
+                    style: {
+                        color: '#333333',
+                        font: 'bold 16px "Montserrat", Verdana, sans-serif'
+                    }
+                },
+                subtitle: {
+                    style: {
+                        color: '#333333',
+                        font: 'bold 12px "Montserrat", Verdana, sans-serif'
+                    }
+                },
+
+                legend: {
+                    itemStyle: {
+                        font: '9pt Montserrat, Verdana, sans-serif',
+                        color: '#333333'
+                    },
+                    itemHoverStyle:{
+                        color: 'gray'
+                    }   
+                }
+            };
+
+            // Apply the theme
+            Highcharts.setOptions(Highcharts.theme);       
+
             // init datepickers
             var dayDatepicker = $('#day-datepicker').datepicker({
                 format: "dd-mm-yyyy",
@@ -137,7 +185,7 @@
             });
 
             function updateStatus() {
-                $("#lastUpdate").text(moment().day(1).format("DD-MM-YYYY HH:mm:ss"));
+                $("#lastUpdate").text(moment().day(1).format("HH:mm:ss"));
 
                 $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
                     $("#online").toggle(data.Online);
@@ -151,10 +199,10 @@
 
                 $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
                     var active= data.Standing + data.Sitting;
-                    $("#active-time").text(formatTime(active));
+                    $("#active-time").html(formatTime(active));
                     var standingRatio = active ==0 ? 0 : Math.ceil((data.Standing / active) * 100);
-                    $("#standing-time").text(formatTime(data.Standing));
-                    $("#standing-ratio").text(standingRatio + "%");
+                    $("#standing-time").html(formatTime(data.Standing));
+                    $("#standing-ratio").html(standingRatio + "<small> %</small>");
 
                     /* gauge */
                     var standing = data.Standing;
@@ -187,9 +235,10 @@
                         // the value axis
                         yAxis: {
                             stops: [
-                              [0.1, '#DF5353'], // red
-                              [0.5, '#DDDF0D'], // yellow
-                              [0.9, '#55BF3B'] // green
+                              [0.1, '#FF6C39'], // red
+                              [0.5, '#FEC900'], // yellow
+                              [0.9, '#98E000'] // green
+                      
                             ],
                             lineWidth: 0,
                             minorTickInterval: null,
@@ -227,8 +276,8 @@
                               data: [standingShare],
                               dataLabels: {
                                   format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">'+Math.round(standingShare)+' %</span><br/>' +
-                                    '<span style="font-size:12px;color:silver">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + '</span></div>'
+                                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">'+Math.round(standingShare)+' <small> %</small></span><br/>' +
+                                    '<span style="font-size:12px;color:#4a4a4a">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + '</span></div>'
                               },
                               tooltip: {
                                   valueSuffix: ' %'
@@ -260,6 +309,11 @@
                                 startAngle: -90,
                                 endAngle: 90,
                                 center: ['50%', '75%']
+                            }
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                return '<b>' + formatTime(this.y) + '</b>' ;
                             }
                         },
                         series: [
@@ -403,6 +457,11 @@
                         plotOptions: {
                             column: {
                                 stacking: 'normal'
+                            }
+                        },
+                        tooltip: {
+                            formatter: function() {
+                                return '<b>'+this.series.name +'</b> on <b>' + this.x + '</b> : <b>' + formatTime(this.y) + '</b>' ;
                             }
                         },
                         series: weekSeries
