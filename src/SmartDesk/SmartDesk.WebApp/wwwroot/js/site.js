@@ -13,7 +13,7 @@ function formatTime(val) {
     var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
 
-    if (minutes < 10) { minutes = "0" + minutes; }
+    if (minutes < 10) { minutes = "0" + minutes; } 
     if (seconds < 10) { seconds = "0" + seconds; }
     return hours + "<small> h</small> " + minutes + "<small> m</small> " /*+ seconds + "s"*/;
 }
