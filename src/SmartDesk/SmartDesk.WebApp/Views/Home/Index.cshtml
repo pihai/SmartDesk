@@ -330,96 +330,85 @@
                 });
                 /* history */
                 $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
-                    $("#dayHistory").text(JSON.stringify(data));
+                  $("#dayHistory").text(JSON.stringify(data));
 
-                    var inactiveData = new Array();
-                    var standingData = new Array();
-                    var sittingData = new Array();
+                  var durationLookup = new Array();
+                  var series = {};
+                  for (var i = 0; i < data.length; i++) {
+                    var activityType = data[i].ActivityType;
+                    if (series[activityType] === undefined)
+                      series[activityType] = { name: activityType, data: new Array() };
+                    var start = Date.parse(data[i].StartDate);
+                    var end = Date.parse(data[i].EndDate);
+                    durationLookup[start] = formatTime((end - start) / 1000);
+                    series[activityType].data.push([start, 1]);
+                    series[activityType].data.push([end, 1]);
+                    series[activityType].data.push([end, null]);
+                  }
 
-                    for (var i = 0; i < data.length; i++) {
+                  var seriesArray = new Array();
+                  for (var key in series)
+                    seriesArray.push(series[key]);
 
-                        switch (data[i].ActivityType) {
-                            case "Standing":
-                                standingData.push([Date.parse(data[i].StartDate), 1]);
-                                standingData.push([Date.parse(data[i].EndDate), 1]);
-                                standingData.push([Date.parse(data[i].EndDate), null]);
-                                break;
-                            case "Sitting":
-                                sittingData.push([Date.parse(data[i].StartDate), 1]);
-                                sittingData.push([Date.parse(data[i].EndDate), 1]);
-                                sittingData.push([Date.parse(data[i].EndDate), null]);
-                                break;
-                            case "Inactive":
-                                inactiveData.push([Date.parse(data[i].StartDate), 1]);
-                                inactiveData.push([Date.parse(data[i].EndDate), 1]);
-                                inactiveData.push([Date.parse(data[i].EndDate), null]);
-                                break;
-                        }
-                    }
+                  $('#dailyHistoryChart').highcharts({
+                    title: {
+                      text: 'Today',
+                      margin: 0,
+                      align: "left"
+                    },
+                    chart: {
+                      type: 'area',
+                      height: 97,
+                      spacingBottom: 0,
+                      marginTop: 0
+                    },
+                    exporting: {
+                      enabled: false
+                    },
 
-                    $('#dailyHistoryChart').highcharts({
-                        title: {
-                            text: 'Today', margin: 0, align: "left"
-                        },
-                        chart: {
-                            type: 'area',
-                            height: 97,
-                            spacingBottom: 0,
-                            marginTop: 0
-                        },
-                        exporting: {
-                            enabled: false
-                        },
-                        xAxis: {
-                            type: 'datetime',
-                            tickPixelInterval: 150
-                            //lineWidth: 0,
-                            //minorGridLineWidth: 0,
-                            //lineColor: 'transparent',
-                            //labels: { enabled: false },
-                            //minorTickLength: 0,
-                            //tickLength: 0
-                        },
-                        yAxis: {
-                            title: '',
-                            lineWidth: 0,
-                            gridLineWidth: 0,
-                            minorGridLineWidth: 0,
-                            lineColor: 'transparent',
-                            labels: { enabled: false },
-                            minorTickLength: 0,
-                            tickLength: 0
-                        },
-                        plotOptions: {
-                            area: {
-                                lineWidth: 0,
-                                marker: {
-                                    enabled: false,
-                                    states: {
-                                        hover: {
-                                            enabled: false
-                                        }
-                                    }
-                                }
+                    tooltip: {
+                      formatter: function() {
+                        return "<strong>" + this.series.name + "</strong><br>" + durationLookup[this.x];
+                      }
+                    },
+                    xAxis: {
+                      type: 'datetime',
+                      tickPixelInterval: 150
+                      //lineWidth: 0,
+                      //minorGridLineWidth: 0,
+                      //lineColor: 'transparent',
+                      //labels: { enabled: false },
+                      //minorTickLength: 0,
+                      //tickLength: 0
+                    },
+                    yAxis: {
+                      title: '',
+                      lineWidth: 0,
+                      gridLineWidth: 0,
+                      minorGridLineWidth: 0,
+                      lineColor: 'transparent',
+                      labels: { enabled: false },
+                      minorTickLength: 0,
+                      tickLength: 0
+                    },
+                    plotOptions: {
+                      area: {
+                        lineWidth: 0,
+                        marker: {
+                          enabled: false,
+                          states: {
+                            hover: {
+                              enabled: false
                             }
-                        },
-                        legend: {
-                            enabled: false
-                        },
-                        series: [
-                          {
-                              name: 'Standing',
-                              data: standingData
-                          }, {
-                              name: 'Sitting',
-                              data: sittingData
-                          }, {
-                              name: 'Inactive',
-                              data: inactiveData
                           }
-                        ]
-
-                    });
+                        }
+                      }
+                    },
+                    legend: {
+                      enabled: false
+                    },
+                    series: seriesArray
+                  });
 
                 });
 
