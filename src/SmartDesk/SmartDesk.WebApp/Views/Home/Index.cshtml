@@ -57,7 +57,11 @@
   </div>
 
   <div class="col-lg-4 col-md-6">
-    <div id="dailyHistoryChart"></div>
+    <div class="panel panel-default tile">
+      <div class="panel-body" style="padding: 0">
+        <div id="dailyHistoryChart"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -359,14 +363,16 @@
                         },
                         chart: {
                             type: 'area',
-                            height: 97
+                            height: 97,
+                            spacingBottom: 0,
+                            marginTop: 0
                         },
                         exporting: {
                             enabled: false
                         },
                         xAxis: {
                             type: 'datetime',
-                            tickPixelInterval: 150,
+                            tickPixelInterval: 150
                             //lineWidth: 0,
                             //minorGridLineWidth: 0,
                             //lineColor: 'transparent',
