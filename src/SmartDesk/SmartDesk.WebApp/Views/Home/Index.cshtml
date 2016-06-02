@@ -65,13 +65,10 @@
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <i class="fa fa-circle-o-notch fa-fw"></i> Today
+          <i class="fa fa-circle-o-notch fa-fw"></i> Daily goal
         </div>
         <div class="panel-body">
           <div class="row">
-            <div class="col-xs-8">
-              <h3> Current status:</h3>
-            </div>
             <div class="col-xs-4 " id="currentStatus"></div>
           </div>
           <div class="row">
@@ -248,7 +245,7 @@
                             min: 0,
                             max: standingShare > 100 ? standingShare : 100,
                             title: {
-                                text: 'Standing duration share',
+                                text: '',
                                 y: 20
                             }
                         },
@@ -275,7 +272,7 @@
                               dataLabels: {
                                   format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                                     ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">'+Math.round(standingShare)+' <small> %</small></span><br/>' +
-                                    '<span style="font-size:12px;color:#4a4a4a">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + '</span></div>'
+                                    '<span style="font-size:12px;color:#4a4a4a">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + ' standing </span></div>'
                               },
                               tooltip: {
                                   valueSuffix: ' %'
@@ -427,15 +424,15 @@
                 var lastDate = moment(date).day(7).format("DD-MM-YYYY");
                 $("#week").text(firstDate + " - " + lastDate);
                 $.getJSON(buildDateUrl('@Url.Action("GetWeekRatio", "Api", new {year = "year", week = "week", deviceid = Model.DeviceId})', date), {}, function(data) {
-
-
+                    
+                    // NOTE: multiplication/division by 60 is done the reach even numbers in hh:mm 
                     var standingData = new Array();
                     var sittingData = new Array();
                     var inactiveData = new Array();
                     for (var i = 0; i < data.length; i++) {
-                        standingData.push(data[i].Standing);
-                        sittingData.push(data[i].Sitting);
-                        inactiveData.push(data[i].Inactive);
+                        standingData.push(data[i].Standing/60);
+                        sittingData.push(data[i].Sitting/60);
+                        inactiveData.push(data[i].Inactive/60);
                     }
                     var weekSeries = new Array();
                     weekSeries.push({ name: 'Standing', data: standingData });
@@ -449,6 +446,13 @@
                         title: {
                             text: ''
                         },
+                        yAxis: {
+                            labels: {
+                                formatter: function() {
+                                    return formatTime(this.value*60) ;
+                                }
+                            }
+                        },
                         xAxis: {
                             categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                         },
@@ -459,7 +463,7 @@
                         },
                         tooltip: {
                             formatter: function() {
-                                return '<b>'+this.series.name +'</b> on <b>' + this.x + '</b> : <b>' + formatTime(this.y) + '</b>' ;
+                                return '<b>'+this.series.name +'</b> on <b>' + this.x + '</b> : <b>' + formatTime(this.y*60) + '</b>' ;
                             }
                         },
                         series: weekSeries
