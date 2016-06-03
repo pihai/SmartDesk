@@ -198,6 +198,7 @@
 
             // Apply the theme
             Highcharts.setOptions(Highcharts.theme);
+            Highcharts.setOptions({ global: { useUTC: false } });
 
             // init datepickers
             var dayDatepicker = $('#day-datepicker').datepicker({
