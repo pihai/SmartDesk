@@ -13,5 +13,6 @@ namespace SmartDesk.WebApp.Queries.TableEntities {
     public long isactive { get; set; }
     public long standing { get; set; }
     public long isonline { get; set; }
+    public double height { get; set; }
   }
 }

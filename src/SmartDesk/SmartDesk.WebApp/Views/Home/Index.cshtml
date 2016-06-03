@@ -65,7 +65,19 @@
   </div>
 </div>
 
-  <div class="row" style="margin-top: 20px;">
+<div class="row" style="margin-top: 20px">
+  <div class="col-lg-2 col-md-3">
+    <div class="panel panel-default tile">
+      <div class="panel-body">
+        <div class="tile-value"><span id="height"></span><span><small>cm</small></span></div>
+        <div class="tile-title">Height</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row" style="margin-top: 20px;">
     <div class="col-lg-4">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -128,13 +140,13 @@
 
             /* styling highchart */
             Highcharts.theme = {
-               /* colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+               /* colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',
                          '#FF9655', '#FFF263', '#6AF9C4'],*/
                 colors: ['#98E000', // green
                          '#FEC900', // yellow
                          '#FF6C39', // orange/red
                          '#2A97FF'  // blue
-                ],
+                ], 
                 chart: {
                     backgroundColor: {
                         linearGradient: [0, 0, 500, 500],
@@ -164,12 +176,12 @@
                     },
                     itemHoverStyle:{
                         color: 'gray'
-                    }   
+                    }
                 }
             };
 
             // Apply the theme
-            Highcharts.setOptions(Highcharts.theme);       
+            Highcharts.setOptions(Highcharts.theme);
 
             // init datepickers
             var dayDatepicker = $('#day-datepicker').datepicker({
@@ -189,12 +201,12 @@
                 $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
                     $("#online").toggle(data.Online);
                     $("#offline").toggle(!data.Online);
+                    $("#height").text(data.Height);
                 });
             }
 
             function updateData() {
                 var date = dayDatepicker.datepicker("getDate");
-
 
                 $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
                     var active= data.Standing + data.Sitting;
@@ -237,7 +249,7 @@
                               [0.1, '#FF6C39'], // red
                               [0.5, '#FEC900'], // yellow
                               [0.9, '#98E000'] // green
-                      
+
                             ],
                             lineWidth: 0,
                             minorTickInterval: null,
@@ -419,8 +431,8 @@
                 var lastDate = moment(date).day(7).format("DD-MM-YYYY");
                 $("#week").text(firstDate + " - " + lastDate);
                 $.getJSON(buildDateUrl('@Url.Action("GetWeekRatio", "Api", new {year = "year", week = "week", deviceid = Model.DeviceId})', date), {}, function(data) {
-                    
-                    // NOTE: multiplication/division by 60 is done the reach even numbers in hh:mm 
+
+                    // NOTE: multiplication/division by 60 is done the reach even numbers in hh:mm
                     var standingData = new Array();
                     var sittingData = new Array();
                     var inactiveData = new Array();
@@ -472,7 +484,7 @@
             setInterval(function() {
                 updateStatus();
                 // todo - only update data when it's the current day/week
-                updateData();              
+                updateData();
             }, 30000);
 
             updateData();

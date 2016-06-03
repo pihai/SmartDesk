@@ -13,20 +13,14 @@ namespace SmartDesk.WebApp.Queries {
 
     public async Task<CurrentStatus> Query(string deviceId) {
       var tableClient = Account.CreateCloudTableClient();
-      var durations = tableClient.GetTableReference("durations");
-      var minDate = DateTime.Now.AddMinutes(-1);
+      var deviceUniqueClient = tableClient.GetTableReference("deviceunique");
       var query =
-        new TableQuery<DurationRow>().Where(
-          $"PartitionKey eq '{deviceId}' and RowKey ge '{minDate.ToString("O")}'");
-      var results = await durations.FetchRecords(query);
-
-      return 
-        results
-          .OrderByDescending(x => x.Timestamp)
-          .Select(x => new CurrentStatus(x.isactive.ToBool(),true,Functions.GetActivityType(x.isactive.ToBool(),x.standing.ToBool())))
-          .FirstOrDefault() ?? new CurrentStatus(false,false,ActivityType.Inactive);
-
-  
+        new TableQuery<LastEventRow>().Where(
+          $"PartitionKey eq '{deviceId}' and RowKey ge 'LastEvent'");
+      var lastEvents = await deviceUniqueClient.FetchRecords(query);
+      var lastEvent = lastEvents.FirstOrDefault();
+      var activityType = Functions.GetActivityType(lastEvent.isactive.ToBool(), lastEvent.standing.ToBool());
+      return new CurrentStatus(lastEvent.isactive.ToBool(), lastEvent.isonline.ToBool(), activityType, lastEvent.height);
     }
   }
 } 

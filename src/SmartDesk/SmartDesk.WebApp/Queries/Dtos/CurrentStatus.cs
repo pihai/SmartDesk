@@ -6,15 +6,16 @@ namespace SmartDesk.WebApp.Queries.Dtos {
 
     public bool Active { get; set; }
     public bool Online { get; set; }
+    public double Height { get; set; }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public ActivityType ActivityType { get; set; }
 
-    public CurrentStatus(bool active, bool online, ActivityType activityType) {
+    public CurrentStatus(bool active, bool online, ActivityType activityType, double height) {
       Active = active;
       Online = online;
       ActivityType = activityType;
-    
+      Height = height;
     }
   }
 }
