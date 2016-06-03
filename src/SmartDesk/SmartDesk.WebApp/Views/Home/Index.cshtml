@@ -34,7 +34,7 @@
   <div class="col-lg-2 col-md-3">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div class="tile-value" id="standing-time""></div>
+        <div class="tile-value" id="standing-time"></div>
         <div class="tile-title">Standing Today</div>
       </div>
     </div>
@@ -69,8 +69,24 @@
   <div class="col-lg-2 col-md-3">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div class="tile-value"><span id="height"></span><span><small>cm</small></span></div>
+        <div class="tile-value"><span id="height"></span><span> <small>cm</small></span></div>
         <div class="tile-title">Height</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3">
+    <div class="panel panel-default tile">
+      <div class="panel-body">
+        <div class="tile-value"><span id="caloriesToday"></span><span> <small>kcal</small></span></div>
+        <div class="tile-title">Calories</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-3">
+    <div class="panel panel-default tile">
+      <div class="panel-body">
+        <div class="tile-value"><span id="additionalCaloriesToday"></span><span> <small>kcal</small></span></div>
+        <div class="tile-title">Additional Calories</div>
       </div>
     </div>
   </div>
@@ -214,6 +230,16 @@
                     var standingRatio = active ==0 ? 0 : Math.ceil((data.Standing / active) * 100);
                     $("#standing-time").html(formatTime(data.Standing));
                     $("#standing-ratio").html(standingRatio + "<small> %</small>");
+
+                    // http://www.livestrong.com/article/461950-how-many-calories-can-you-burn-daily-just-from-sitting-walking-around-a-house/
+                    var sittingCalBurnPerSec = 100 / 3600;
+                    // http://www.bbc.com/news/magazine-24532996
+                    var standingCalBurnPerSec = (0.7 / 60) + sittingCalBurnPerSec;
+
+                    var totalCals = data.Sitting * sittingCalBurnPerSec + data.Standing * standingCalBurnPerSec;
+                    var additionalCals = data.Standing * standingCalBurnPerSec - data.Standing * sittingCalBurnPerSec;
+                    $("#caloriesToday").text(Math.round(totalCals));
+                    $("#additionalCaloriesToday").text(Math.round(additionalCals));
 
                     /* gauge */
                     var standing = data.Standing;
