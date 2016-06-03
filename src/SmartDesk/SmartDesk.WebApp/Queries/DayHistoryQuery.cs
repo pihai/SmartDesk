@@ -24,12 +24,17 @@ namespace SmartDesk.WebApp.Queries {
           $"PartitionKey eq '{deviceId}' and RowKey ge '{minDate.ToString("O")}' and RowKey le '{maxDate.ToString("O")}'");
       var durations = await durationsClient.FetchRecords(query);
 
-      // query the last known event, because the current period has no end yet
-      var deviceUniqueClient = tableClient.GetTableReference("deviceunique");
-      var query2 =
-        new TableQuery<LastEventRow>().Where(
-          $"PartitionKey eq '{deviceId}' and RowKey ge 'LastEvent'");
-      var lastEvent = await deviceUniqueClient.FetchRecords(query2);
+      var lastEvent = Enumerable.Empty<LastEventRow>();
+      // hacky
+      if (date.Date == DateTime.Today) {
+
+        // query the last known event, because the current period has not end yet
+        var deviceUniqueClient = tableClient.GetTableReference("deviceunique");
+        var query2 =
+          new TableQuery<LastEventRow>().Where(
+            $"PartitionKey eq '{deviceId}' and RowKey ge 'LastEvent'");
+        lastEvent = await deviceUniqueClient.FetchRecords(query2);
+      }
 
       var result =
         durations.Concat(lastEvent.Select(x => new ChangeRow { isonline = x.isonline, isactive = x.isactive, standing = x.standing, RowKey = x.Timestamp.ToString("o")}))
