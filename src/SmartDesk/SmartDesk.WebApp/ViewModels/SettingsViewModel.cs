@@ -7,7 +7,7 @@ namespace SmartDesk.WebApp.ViewModels {
     [Required]
     public TimeSpan StandingTarget { get; set; }
     [Required]
-    public string DeviceId { get; set; }
+    public int DeviceId { get; set; }
     [Required]
     public int Height { get; set; }
     public IEnumerable<string> Devices { get; set; }

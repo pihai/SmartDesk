@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace SmartDesk.WebApp.Services {
   public interface ISettingsService {
-    Task<Settings> LoadSettings(string deviceId);
+    Task<Settings> LoadSettings(int deviceId);
     Task SaveSettings(Settings settings);
   }
 
   public class Settings {
     public TimeSpan StandingTarget { get; set; }
-    public string DeviceId { get; set; }
+    public int DeviceId { get; set; }
     public int Height { get; set; }
 
-    public Settings(TimeSpan standingTarget, string deviceId, int height) {
+    public Settings(TimeSpan standingTarget, int deviceId, int height) {
       StandingTarget = standingTarget;
       DeviceId = deviceId;
       Height = height;

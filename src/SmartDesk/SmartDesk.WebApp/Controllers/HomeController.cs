@@ -17,14 +17,14 @@ namespace SmartDesk.WebApp.Controllers {
     }
 
     public async Task<IActionResult> Index() {
-      var settings = await _settingsService.LoadSettings("1");
+      var settings = await _settingsService.LoadSettings(1);
       var viewModel = new DashboardViewModel(settings.DeviceId, settings.StandingTarget);
       return View(viewModel);
     }
 
     [HttpGet]
     public async Task<IActionResult> Settings() {
-      var settings = await _settingsService.LoadSettings("1");
+      var settings = await _settingsService.LoadSettings(1);
       return View(new SettingsViewModel {
         DeviceId = settings.DeviceId,
         Height = settings.Height,

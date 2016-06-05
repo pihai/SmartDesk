@@ -10,13 +10,13 @@ using SmartDesk.WebApp.Queries;
 
 namespace SmartDesk.WebApp.Services {
   public class SettingsService : ISettingsService {
-    private static readonly ConcurrentDictionary<string, Settings> Db = new ConcurrentDictionary<string, Settings>();
+    private static readonly ConcurrentDictionary<int, Settings> Db = new ConcurrentDictionary<int, Settings>();
 
     static SettingsService () {
-      Db.TryAdd("1", new Settings(new TimeSpan(4, 30, 0), "1", 80));
+      Db.TryAdd(1, new Settings(new TimeSpan(4, 30, 0), 1, 80));
     }
 
-    public Task<Settings> LoadSettings(string deviceId) {
+    public Task<Settings> LoadSettings(int deviceId) {
       Settings result;
       Db.TryGetValue(deviceId, out result);
       return Task.FromResult(result);
@@ -32,7 +32,7 @@ namespace SmartDesk.WebApp.Services {
     public BlobStorageSettingsService(CloudStorageAccount account) : base(account) {
     }
 
-    public async Task<Settings> LoadSettings(string deviceId) {
+    public async Task<Settings> LoadSettings(int deviceId) {
       var client = Account.CreateCloudBlobClient();
       var container = client.GetContainerReference("sa-ref-data");
       var blob = container.GetBlockBlobReference("device-list.json");
@@ -50,14 +50,21 @@ namespace SmartDesk.WebApp.Services {
       var blob = container.GetBlockBlobReference("device-list.json");
       var result = await blob.DownloadTextAsync();
       var devices = JsonConvert.DeserializeObject<Settings[]>(result).ToList();
-      devices.RemoveAt(devices.FindIndex(x => x.DeviceId == settings.DeviceId));
+      var existingIndex = devices.FindIndex(x => x.DeviceId == settings.DeviceId);
+      if(existingIndex != -1) devices.RemoveAt(existingIndex);
       devices.Add(settings);
       var updated = JsonConvert.SerializeObject(devices.ToArray());
       await blob.UploadTextAsync(updated);
       var now = DateTime.UtcNow.AddMinutes(1);
 
-      var saBlobRef = container.GetBlockBlobReference($"{now.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}/{now.ToString("HH-mm", CultureInfo.InvariantCulture)}");
+      var saBlobRef = container.GetBlockBlobReference($"{now.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}/00-00/device-list.json");
       await saBlobRef.UploadTextAsync(updated);
+
+      saBlobRef = container.GetBlockBlobReference($"{now.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}/{now.ToString("HH-mm", CultureInfo.InvariantCulture)}/device-list.json");
+      await saBlobRef.UploadTextAsync(updated);
+
+      //saBlobRef = container.GetBlockBlobReference($"{now.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}/{now.ToString("HH-mm", CultureInfo.InvariantCulture)}/device-list.json");
+      //await saBlobRef.UploadTextAsync(updated);
     }
   }
 }
