@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
@@ -53,6 +54,10 @@ namespace SmartDesk.WebApp.Services {
       devices.Add(settings);
       var updated = JsonConvert.SerializeObject(devices.ToArray());
       await blob.UploadTextAsync(updated);
+      var now = DateTime.UtcNow.AddMinutes(1);
+
+      var saBlobRef = container.GetBlockBlobReference($"{now.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture)}/{now.ToString("HH-mm", CultureInfo.InvariantCulture)}");
+      await saBlobRef.UploadTextAsync(updated);
     }
   }
 }
