@@ -24,20 +24,20 @@
                         @using (Html.BeginForm(FormMethod.Post)) {
 
 
-                        <div class="form-group">
-                            <label>Table height</label>
-                            <div class="input-group">
-                                @Html.TextBoxFor(model => model.Height, new { type = "number", @class = "form-control", placeholder = "Enter height", aria_describedby = "height-unit" })
-                                <span class="input-group-addon" id="height-unit">cm</span>
+                            <div class="form-group">
+                                <label>Table height</label>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(model => model.Height, new { type = "number", @class = "form-control", placeholder = "Enter height", aria_describedby = "height-unit" })
+                                    <span class="input-group-addon" id="height-unit">cm</span>
+                                </div>
                             </div>
-                        </div>
                             <div class="form-group">
                                 <label>Target standing time</label>
-                                @Html.TextBoxFor(model => model.StandingTarget, new { type = "time", @class = "form-control", placeholder = "Enter targeted standing time", aria_describedby = "height-unit" })
+                                @Html.TextBoxFor(model => model.StandingTarget, new { @class = "form-control" })
                             </div>
                             <div class="form-group">
                                 <label>Device</label>
-                                @Html.DropDownListFor(model => model.DeviceId, Model.Devices.Select(d => new SelectListItem { Text = d, Value = d }).ToList(), new { @class = "form-control" })
+                                @Html.TextBoxFor(model => model.DeviceId, new { @class = "form-control" })
                             </div>
 
                             <button type="submit" class="btn btn-default">Save</button>

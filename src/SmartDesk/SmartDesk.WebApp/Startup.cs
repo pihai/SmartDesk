@@ -57,7 +57,7 @@ namespace SmartDesk.WebApp {
           Configuration.GetConnectionString("AzureStorage")
 
           ));
-      services.AddTransient<ISettingsService, SettingsService>();
+      services.AddTransient<ISettingsService, BlobStorageSettingsService>();
       services.AddTransient<DayHistoryQuery, DayHistoryQuery>();
       services.AddTransient<DayRatioQuery, DayRatioQuery>();
       services.AddTransient<TotalStatsQuery, TotalStatsQuery>();

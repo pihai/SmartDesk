@@ -11,45 +11,34 @@ using SmartDesk.WebApp.Services;
 namespace SmartDesk.WebApp.Controllers {
   public class HomeController : Controller {
     private readonly ISettingsService _settingsService;
-    public HomeController(ISettingsService settingsService) {
 
+    public HomeController(ISettingsService settingsService) {
       _settingsService = settingsService;
     }
-    public IActionResult Index() {
-      Settings settings = _settingsService.LoadSettings();
-      var viewModel = new DashboardViewModel(settings.DeviceId,settings.StandingTarget);
+
+    public async Task<IActionResult> Index() {
+      var settings = await _settingsService.LoadSettings("1");
+      var viewModel = new DashboardViewModel(settings.DeviceId, settings.StandingTarget);
       return View(viewModel);
     }
 
-    public IActionResult About() {
-      ViewData["Message"] = "Your application description page.";
-
-      return View();
-    }
-
-    public IActionResult Contact() {
-      ViewData["Message"] = "Your contact page.";
-
-      return View();
-    }
     [HttpGet]
-    public IActionResult Settings() {
-      Settings settings = _settingsService.LoadSettings();
+    public async Task<IActionResult> Settings() {
+      var settings = await _settingsService.LoadSettings("1");
       return View(new SettingsViewModel {
         DeviceId = settings.DeviceId,
         Height = settings.Height,
-        StandingTarget = settings.StandingTarget,
-        Devices = _settingsService.AvailableDevices()
+        StandingTarget = settings.StandingTarget
       });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public  IActionResult Settings(SettingsViewModel model) {
-
-      _settingsService.SaveSettings(new Settings(model.StandingTarget, model.DeviceId, model.Height));
+    public async Task<IActionResult> Settings(SettingsViewModel model) {
+      await _settingsService.SaveSettings(new Settings(model.StandingTarget, model.DeviceId, model.Height));
       return RedirectToAction(nameof(Settings));
     }
+
     public IActionResult Error() {
       return View();
     }
