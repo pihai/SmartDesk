@@ -69,10 +69,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\App.secret.config">
+    <Content Include="..\App.secret.config">
       <Link>App.secret.config</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
