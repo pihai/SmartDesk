@@ -46,7 +46,8 @@ namespace SmartDesk.WebApp.Queries {
               DateTime.Parse(pair.Item2.RowKey),
               Functions.GetActivityType(
                 pair.Item1.isactive.ToBool(),
-                pair.Item1.standing.ToBool()
+                pair.Item1.standing.ToBool(),
+                true
                 )
               )
           )

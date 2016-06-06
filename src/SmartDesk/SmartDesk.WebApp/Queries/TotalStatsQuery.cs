@@ -23,7 +23,7 @@ namespace SmartDesk.WebApp.Queries {
       var grouped =
         results
           .Select(x => new {
-            type = Functions.GetActivityType(x.isactive.ToBool(), x.standing.ToBool()),
+            type = Functions.GetActivityType(x.isactive.ToBool(), x.standing.ToBool(), true),
             duration = x.duration
           })
           .GroupBy(x => x.type)

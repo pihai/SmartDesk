@@ -25,8 +25,7 @@
   <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
-        <div id="offline" class="tile-value" style="color: #FF6C39; display: none">Offline</div>
-        <div id="online" class="tile-value" style="color: #98E000; display: none">Online</div>
+        <div class="tile-value"><span id="status">&nbsp;</span></div>
         <div class="tile-title">Status</div>
       </div>
     </div>
@@ -227,12 +226,29 @@
                 updateData(); // update charts on change
             });
 
+            
+
             function updateStatus() {
                 $("#lastUpdate").text(moment().day(1).format("HH:mm:ss"));
 
                 $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
-                    $("#online").toggle(data.Online);
-                    $("#offline").toggle(!data.Online);
+                  $("#status").text(data.ActivityType);
+
+                  function getStatusColor(s) {
+                    switch (s) {
+                    case "Standing":
+                      return "#98E000";
+                    case "Offline":
+                      return "#FF6C39";
+                    default:
+                      return "inherit";
+                    }
+                  }
+
+                  $("#status").css('color', getStatusColor(data.ActivityType));
+
+                    //$("#online").toggle(data.Online);
+                    //$("#offline").toggle(!data.Online);
                     $("#height").text(data.Height);
                 });
             }

@@ -19,7 +19,7 @@ namespace SmartDesk.WebApp.Queries {
           $"PartitionKey eq '{deviceId}' and RowKey ge 'LastEvent'");
       var lastEvents = await deviceUniqueClient.FetchRecords(query);
       var lastEvent = lastEvents.FirstOrDefault();
-      var activityType = Functions.GetActivityType(lastEvent.isactive.ToBool(), lastEvent.standing.ToBool());
+      var activityType = Functions.GetActivityType(lastEvent.isactive.ToBool(), lastEvent.standing.ToBool(), lastEvent.isonline.ToBool());
       return new CurrentStatus(lastEvent.isactive.ToBool(), lastEvent.isonline.ToBool(), activityType, lastEvent.height);
     }
   }
