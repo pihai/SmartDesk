@@ -22,7 +22,7 @@
 </div>
 
 <div class="row" style="margin-top: 20px">
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
         <div id="offline" class="tile-value" style="color: #FF6C39; display: none">Offline</div>
@@ -31,7 +31,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
         <div class="tile-value" id="standing-time"></div>
@@ -39,7 +39,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
         <div class="tile-value" id="standing-ratio">55 %</div>
@@ -47,16 +47,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
-    <div class="panel panel-default tile">
-      <div class="panel-body">
-        <div class="tile-value" id="active-time">6 h 35 min</div>
-        <div class="tile-title">Active Time</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+  <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
     <div class="panel panel-default tile">
       <div class="panel-body" style="padding: 0">
         <div id="dailyHistoryChart"></div>
@@ -65,8 +56,8 @@
   </div>
 </div>
 
-<div class="row" style="margin-top: 20px">
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+<div class="row">
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
         <div class="tile-value"><span id="height"></span><span> <small>cm</small></span></div>
@@ -74,7 +65,15 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
+    <div class="panel panel-default tile">
+      <div class="panel-body">
+        <div class="tile-value" id="active-time">6 h 35 min</div>
+        <div class="tile-title">Active Time</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
         <div class="tile-value"><span id="caloriesToday"></span><span> <small>kcal</small></span></div>
@@ -82,7 +81,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-2 col-md-3 col-sm-6 col-xs-6">
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
     <div class="panel panel-default tile">
       <div class="panel-body">
         <div class="tile-value"><span id="additionalCaloriesToday"></span><span> <small>kcal</small></span></div>
@@ -90,11 +89,27 @@
       </div>
     </div>
   </div>
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
+    <div class="panel panel-default tile">
+      <div class="panel-body">
+        <div class="tile-value"><span id="nrOfStands"></span></div>
+        <div class="tile-title">Standing Count</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
+    <div class="panel panel-default tile">
+      <div class="panel-body">
+        <div class="tile-value"><span id="longestStand"></span></div>
+        <div class="tile-title">Max Standing Period</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
-<div class="row" style="margin-top: 20px;">
-    <div class="col-lg-4">
+<div class="row">
+    <div class="col-lg-4 col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
           <i class="fa fa-circle-o-notch fa-fw"></i> Daily goal
@@ -109,7 +124,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-4 col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-pie-chart fa-fw"></i>Day ratio
@@ -119,7 +134,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-4 col-md-12">
       <div class="panel panel-default">
         <div class="panel-heading">
           <i class="fa fa-bar-chart fa-fw"></i> Weekly
@@ -228,7 +243,7 @@
                 $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
                     var active= data.Standing + data.Sitting;
                     $("#active-time").html(formatTime(active));
-                    var standingRatio = active ==0 ? 0 : Math.ceil((data.Standing / active) * 100);
+                    var standingRatio = active == 0 ? 0 : Math.ceil((data.Standing / active) * 100);
                     $("#standing-time").html(formatTime(data.Standing));
                     $("#standing-ratio").html(standingRatio + "<small> %</small>");
 
@@ -369,8 +384,10 @@
                 });
                 /* history */
                 $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
-                  $("#dayHistory").text(JSON.stringify(data));
+                  //$("#dayHistory").text(JSON.stringify(data));
 
+                  var nrOfStands = 0;
+                  var longestStand = 0;
                   var durationLookup = new Array();
                   var series = {};
                   for (var i = 0; i < data.length; i++) {
@@ -379,11 +396,20 @@
                       series[activityType] = { name: activityType, data: new Array() };
                     var start = Date.parse(data[i].StartDate);
                     var end = Date.parse(data[i].EndDate);
-                    durationLookup[start] = formatTime((end - start) / 1000);
+                    var duration = (end - start) / 1000; // sec
+                    durationLookup[start] = formatTime(duration);
                     series[activityType].data.push([start, 1]);
                     series[activityType].data.push([end, 1]);
                     series[activityType].data.push([end, null]);
+                    if (activityType === 'Standing') {
+                      nrOfStands++;
+                      if (duration > longestStand)
+                        longestStand = duration;
+                    }
                   }
+
+                  $("#nrOfStands").text(nrOfStands);
+                  $("#longestStand").html(formatTime(longestStand));
 
                   var seriesArray = new Array();
                   for (var key in series)
