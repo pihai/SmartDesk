@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,9 @@ namespace SimulatedDevice {
 
       //Foo().GetAwaiter().GetResult();
 
-      Console.WriteLine("done");
       SendDeviceToCloudMessagesAsync();
       //Foo();
+      Console.WriteLine("done");
 
 
       Console.ReadLine();
@@ -92,28 +93,24 @@ namespace SimulatedDevice {
     }
 
     private static async void SendDeviceToCloudMessagesAsync() {
-      var standing = 100;
-      var sitting = 50;
+      var standing = 120;
+      var sitting = 60;
 
-      // 2 min standing
-      for (var i = 0; i < 3; i++) {
-        await SendTelemetryMessage(standing, true);
-        await Task.Delay(TimeSpan.FromMinutes(1));
-      }
-
-      // 4 minute sitting
+      // 3 min standing
       for (var i = 0; i < 4; i++) {
-        await SendTelemetryMessage(sitting, true);
+        await SendTelemetryMessage(130, false);
+        await Task.Delay(TimeSpan.FromMinutes(1));
+      }
+      for (var i = 0; i < 4; i++) {
+        await SendTelemetryMessage(130, true);
         await Task.Delay(TimeSpan.FromMinutes(1));
       }
 
-      // 8 minute inactive
-      for (var i = 0; i < 8; i++) {
-        await SendTelemetryMessage(sitting, false);
-        await Task.Delay(TimeSpan.FromMinutes(1));
-      }
-
-
+      //// 4 minute sitting
+      //for (var i = 0; i < 4; i++) {
+      //  await SendTelemetryMessage(sitting, true);
+      //  await Task.Delay(TimeSpan.FromMinutes(1));
+      //}
 
       //for (var j = 0; j < 2; j++) {
       //  for (int i = 0; i < 3; i++) {
@@ -172,7 +169,7 @@ namespace SimulatedDevice {
     private static async Task SendTelemetryMessage(double height, bool isActive, int id = 1) {
       var telemetryDataPoint = new {
         DeviceId = id,
-        Timestamp = DateTime.Now.ToString("o"),
+        Timestamp = DateTime.Now.ToString("O", CultureInfo.InvariantCulture),
         Height = height,
         IsActive = isActive
       };
@@ -189,7 +186,7 @@ namespace SimulatedDevice {
         catch {
         }
         Console.WriteLine(e);
-        await Task.Delay(30000);
+        await Task.Delay(20000);
         _deviceClient = CreateDeviceClient();
         Console.WriteLine("retry");
         await _deviceClient.SendEventAsync(message);

@@ -39,7 +39,7 @@ namespace SmartDesk.WebApp.Queries {
       var result =
         durations.Concat(lastEvent.Select(x => new ChangeRow { isonline = x.isonline, isactive = x.isactive, standing = x.standing, RowKey = x.Timestamp.ToString("o")}))
           .Pairwise(Tuple.Create)
-          .Where(pair => pair.Item1.isonline.ToBool() && pair.Item2.isonline.ToBool())
+          .Where(pair => pair.Item1.isonline.ToBool())
           .Select(pair =>
             new DayHistoryEntry(
               DateTime.Parse(pair.Item1.RowKey),
