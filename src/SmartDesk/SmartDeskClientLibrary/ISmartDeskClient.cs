@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartDesk.Client
-{
-    public interface ISmartDeskClient
-    {
-        bool IsConnected();
+namespace SmartDesk.Client {
+  public interface ISmartDeskClient: IDisposable {
+    bool IsConnected();
 
-        int GetHeight();
+    int GetHeight();
 
-        bool TryGetHeight(out int height);
+    bool TryGetHeight(out int height);
 
-    }
+  }
 }

@@ -1,56 +1,49 @@
-int trigger = 7;
-int echo = 6;
-long dauer = 0;
+const int triggerPin = 7;
+const int echoPin = 6;
 
-long entfernung = 0;
-byte inputByte = 0;
-
-
-void setup()
-{
+void setup() {
+  // Init serial
   Serial.begin(9600);
-
-  pinMode(trigger, OUTPUT);
-  pinMode(echo, INPUT);
+  // Init pins
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 void loop() {
-
-  //Read Buffer
-  if (Serial.available() == 5)
-  {
+  byte inputCmd = 0;
+  long distance;
+  //Check if there is something to read
+  if (Serial.available() == 1) {
     //Read buffer
-    inputByte = Serial.read();
+    inputCmd = Serial.read();
 
-  }
-  //Check for start of Message
-  if (inputByte == 'R')
-  {
-
-
-    digitalWrite(trigger, LOW);
-
-    delay(5);
-    digitalWrite(trigger, HIGH);
-    delay(10);
-    digitalWrite(trigger, LOW);
-    dauer = pulseIn(echo, HIGH);
-
-    entfernung = (dauer / 2) / 29.1;
-
-    if (entfernung >= 500 || entfernung <= 0)
-    {
-      Serial.println("-1\n");
+    //Check for Cmd
+    if (inputCmd == 'R') {
+      distance = getDistance();
+      if (distance >= 500 || distance <= 0)
+        Serial.println("-1");
+      else
+        Serial.println(distance);
     }
-    else
-    {
-      Serial.print(entfernung);
-      Serial.println("\n");
+    else {
+      Serial.print("Unkown commamd: ");
+      Serial.println((char)inputCmd);
     }
-    //delay(1000);
+    //Clear Cmd bytes
+    inputCmd = 0;
   }
-  //Clear Message bytes
-  inputByte = 0;
+}
 
+// Evaluate distance
+int getDistance() {
+  long duration = 0;
+  digitalWrite(triggerPin, LOW);
+  delay(5);
+  digitalWrite(triggerPin, HIGH);
+  delay(10);
+  digitalWrite(triggerPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+
+  return (duration / 2) / 29.1;
 }
 
