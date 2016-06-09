@@ -108,47 +108,48 @@
 
 
 <div class="row">
-    <div class="col-lg-4 col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <i class="fa fa-circle-o-notch fa-fw"></i> Daily goal
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-xs-4 " id="currentStatus"></div>
-          </div>
-          <div class="row">
-            <div id="todayGauge" style="width: 100%; height: 300px; float: left"></div>
-          </div>
-        </div>
+  <div class="col-lg-4 col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-circle-o-notch fa-fw"></i> Daily goal
       </div>
-    </div>
-    <div class="col-lg-4 col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-pie-chart fa-fw"></i>Day ratio
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4 " id="currentStatus"></div>
         </div>
-        <div class="panel-body">
-            <div id="dailyRatioChart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <i class="fa fa-bar-chart fa-fw"></i> Weekly
-          <div class="pull-right">         
-                <div class="" id="week"></div>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div id="weeklyRatioChart"></div>
-          </div>
+        <div class="row">
+          <div id="todayGauge"></div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="col-lg-4 col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-pie-chart fa-fw"></i>Day ratio
+      </div>
+      <div class="panel-body">
+        <div id="dailyRatioChart"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <i class="fa fa-bar-chart fa-fw"></i> Weekly
+        <div class="pull-right">
+          <div class="" id="week"></div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div id="weeklyRatioChart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
  
 
@@ -279,7 +280,8 @@
                     var standingShare = (standing / targetStanding) * 100;
                     $('#todayGauge').highcharts({
                         chart: {
-                            type: 'solidgauge'
+                          type: 'solidgauge',
+                          height: 250
                         },
 
                         title: null,
@@ -365,19 +367,26 @@
                         title: {
                             text: ''
                         },
+                        //legend: {
+                        //  enabled: true
+                        //},
                         exporting: {
                             enabled: false
                         },
                         chart: {
                             plotBackgroundColor: null,
                             plotBorderWidth: 0,
-                            plotShadow: false
+                            plotShadow: false,
+                            height: 250
                         },
                         plotOptions: {
                             pie: {
                                 startAngle: -90,
                                 endAngle: 90,
-                                center: ['50%', '75%']
+                                center: ['50%', '100%'],
+                                dataLabels: { enabled: false },
+                                showInLegend: true,
+                                size: '200%'
                             }
                         },
                         tooltip: {
@@ -398,6 +407,7 @@
 
 
                 });
+
                 /* history */
                 $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
                   //$("#dayHistory").text(JSON.stringify(data));
@@ -427,9 +437,7 @@
                   $("#nrOfStands").text(nrOfStands);
                   $("#longestStand").html(formatTime(longestStand));
 
-                  var seriesArray = new Array();
-                  for (var key in series)
-                    seriesArray.push(series[key]);
+                  var seriesArray = [ series['Standing'], series['Sitting'], series['Inactive'] ];
 
                   $('#dailyHistoryChart').highcharts({
                     title: {
@@ -517,7 +525,8 @@
 
                     $('#weeklyRatioChart').highcharts({
                         chart: {
-                            type: 'column'
+                          type: 'column',
+                          height: 250
                         },
                         title: {
                             text: ''
