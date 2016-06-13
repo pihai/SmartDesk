@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
-using SmartDesk.WebApp.Queries.Dtos;
-using System.Globalization;
+using SmartDesk.Shared.Queries.Dtos;
 
-namespace SmartDesk.WebApp.Queries {
+namespace SmartDesk.Shared.Queries {
   public static class Functions {
     public static async Task<List<T>> FetchRecords<T>(this CloudTable table, TableQuery<T> query, TableContinuationToken token = null)
       where T : ITableEntity, new() {

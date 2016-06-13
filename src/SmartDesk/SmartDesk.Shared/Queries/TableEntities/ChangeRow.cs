@@ -1,6 +1,6 @@
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace SmartDesk.WebApp.Queries.TableEntities {
+namespace SmartDesk.Shared.Queries.TableEntities {
   public class ChangeRow : TableEntity {
     public long deviceid { get; set; }
     public long isactive { get; set; }

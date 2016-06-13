@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SmartDesk.WebApp.Queries;
-using SmartDesk.WebApp.Queries.Dtos;
+using SmartDesk.Shared.Queries;
+using SmartDesk.Shared.Queries.Dtos;
 
 namespace SmartDesk.WebApp.Controllers {
   [Produces("application/json")]

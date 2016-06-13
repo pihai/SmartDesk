@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
+using SmartDesk.Shared.Queries;
 using SmartDesk.WebApp.Data;
 using SmartDesk.WebApp.Models;
-using SmartDesk.WebApp.Queries;
 using SmartDesk.WebApp.Services;
 
 namespace SmartDesk.WebApp {
@@ -61,8 +61,10 @@ namespace SmartDesk.WebApp {
       services.AddTransient<DayHistoryQuery, DayHistoryQuery>();
       services.AddTransient<DayRatioQuery, DayRatioQuery>();
       services.AddTransient<TotalStatsQuery, TotalStatsQuery>();
-      services.AddTransient<CurrentStatusQuery, CurrentStatusQuery>();
 
+
+      services.AddTransient<CurrentStatusQuery, CurrentStatusQuery>();
+      SmartDesk.Shared.Class1.Hello();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

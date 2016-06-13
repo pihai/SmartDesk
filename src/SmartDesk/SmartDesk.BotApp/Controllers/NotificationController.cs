@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Configuration;
 using System.Web.Http;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Connector.Utilities;
 
 namespace SmartDesk.BotApp {
   public class NotificationController : ApiController {

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using SmartDesk.WebApp.Queries.Dtos;
-using SmartDesk.WebApp.Queries.TableEntities;
+using SmartDesk.Shared.Queries.Dtos;
+using SmartDesk.Shared.Queries.TableEntities;
 
-namespace SmartDesk.WebApp.Queries {
+namespace SmartDesk.Shared.Queries {
   public class DayHistoryQuery : BaseQuery {
     public DayHistoryQuery(CloudStorageAccount account) : base(account) {
     }

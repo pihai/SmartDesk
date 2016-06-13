@@ -38,7 +38,8 @@
       "version": "1.0.0-preview1-final",
       "type": "build"
     },
-    "WindowsAzure.Storage": "7.0.2-preview"
+    "WindowsAzure.Storage": "7.0.2-preview",
+    "SmartDesk.Shared": "1.0.0-*"
   },
 
   "tools": {
@@ -72,11 +73,11 @@
 
   "frameworks": {
     "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "dnxcore50",
-        "portable-net45+win8"
-      ]
+        "imports": [
+            "dotnet5.6",
+            "dnxcore50",
+            "portable-net45+win8"
+        ]
     }
   },
 

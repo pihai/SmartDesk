@@ -1,7 +1,7 @@
 using System;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace SmartDesk.WebApp.Queries.TableEntities {
+namespace SmartDesk.Shared.Queries.TableEntities {
   public class DurationRow : TableEntity {
     public DateTime startdate { get; set; }
     public DateTime enddate { get; set; }

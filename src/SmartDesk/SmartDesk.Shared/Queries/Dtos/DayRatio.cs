@@ -1,4 +1,4 @@
-namespace SmartDesk.WebApp.Queries.Dtos {
+namespace SmartDesk.Shared.Queries.Dtos {
   public class DayRatio {
     public double Standing { get; set; }
     public double Sitting { get; set; }

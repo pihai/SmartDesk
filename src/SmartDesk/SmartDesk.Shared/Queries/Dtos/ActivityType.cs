@@ -1,4 +1,4 @@
-namespace SmartDesk.WebApp.Queries.Dtos {
+namespace SmartDesk.Shared.Queries.Dtos {
   public enum ActivityType {
     Standing,
     Sitting,

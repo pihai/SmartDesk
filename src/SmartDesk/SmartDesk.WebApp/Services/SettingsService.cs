@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
-using SmartDesk.WebApp.Queries;
+using SmartDesk.Shared.Queries;
 
 namespace SmartDesk.WebApp.Services {
   public class SettingsService : ISettingsService {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 
-namespace SmartDesk.WebApp.Queries {
+namespace SmartDesk.Shared.Queries {
   public class BaseQuery {
     protected readonly CloudStorageAccount Account;
 
