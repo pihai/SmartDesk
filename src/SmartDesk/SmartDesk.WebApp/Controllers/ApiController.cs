@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartDesk.Shared.Queries;
 using SmartDesk.Shared.Queries.Dtos;
+using SmartDesk.WebApp.Models;
 
 namespace SmartDesk.WebApp.Controllers {
   [Produces("application/json")]
@@ -24,8 +25,10 @@ namespace SmartDesk.WebApp.Controllers {
     }
 
     [HttpGet("{deviceId}/{year}/{month}/{day}/history")]
-    public async Task<List<DayHistoryEntry>> GetDayHistory(string deviceId, int year, int month, int day) {
-      return await _dayHistoryQuery.Query(deviceId, new DateTime(year, month, day));
+    public async Task<List<DayHistoryEntryDTO>> GetDayHistory(string deviceId, int year, int month, int day) {
+      var result = await _dayHistoryQuery.Query(deviceId, new DateTime(year, month, day));
+      var dtos = result.Select(x => new DayHistoryEntryDTO(x)).ToList();
+      return dtos;
     }
 
     [HttpGet("{deviceId}/{year}/{month}/{day}/ratio")]
@@ -44,8 +47,9 @@ namespace SmartDesk.WebApp.Controllers {
     }
 
     [HttpGet("{deviceId}/status")]
-    public async Task<CurrentStatus> GetCurrentStatus(string deviceId) {
-      return await _currentStatusQuery.Query(deviceId);
+    public async Task<CurrentStatusDTO> GetCurrentStatus(string deviceId) {
+      var result = await _currentStatusQuery.Query(deviceId);
+      return new CurrentStatusDTO(result);
     }
 
     [HttpGet("{deviceId}/{year}/{week}/ratio")]
@@ -59,4 +63,6 @@ namespace SmartDesk.WebApp.Controllers {
       return (await Task.WhenAll(tasks)).ToList();
     }
   }
+
+
 }

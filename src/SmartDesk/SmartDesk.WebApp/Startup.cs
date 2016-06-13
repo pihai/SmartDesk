@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
+using Newtonsoft.Json;
 using SmartDesk.Shared.Queries;
 using SmartDesk.WebApp.Data;
 using SmartDesk.WebApp.Models;
@@ -55,16 +56,12 @@ namespace SmartDesk.WebApp {
       services.TryAddSingleton(
         CloudStorageAccount.Parse(
           Configuration.GetConnectionString("AzureStorage")
-
           ));
       services.AddTransient<ISettingsService, BlobStorageSettingsService>();
       services.AddTransient<DayHistoryQuery, DayHistoryQuery>();
       services.AddTransient<DayRatioQuery, DayRatioQuery>();
       services.AddTransient<TotalStatsQuery, TotalStatsQuery>();
-
-
       services.AddTransient<CurrentStatusQuery, CurrentStatusQuery>();
-      SmartDesk.Shared.Class1.Hello();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
