@@ -415,7 +415,7 @@
                   var nrOfStands = 0;
                   var longestStand = 0;
                   var durationLookup = new Array();
-                  var series = {};
+                  var series = [];
                   for (var i = 0; i < data.length; i++) {
                     var activityType = data[i].ActivityType;
                     if (series[activityType] === undefined)
@@ -437,7 +437,10 @@
                   $("#nrOfStands").text(nrOfStands);
                   $("#longestStand").html(formatTime(longestStand));
 
-                  var seriesArray = [ series['Standing'], series['Sitting'], series['Inactive'] ];
+                  var seriesArray = [ ];
+                  for (var x in series)
+                    seriesArray.push(series[x]);
+
 
                   $('#dailyHistoryChart').highcharts({
                     title: {
