@@ -437,10 +437,10 @@
                   $("#nrOfStands").text(nrOfStands);
                   $("#longestStand").html(formatTime(longestStand));
 
-                  var seriesArray = [ ];
-                  for (var x in series)
-                    seriesArray.push(series[x]);
-
+                  var seriesArray = [];
+                  [ "Standing", "Sitting", "Inactive" ].forEach(function(key) {
+                    if (series[key] !== undefined) seriesArray.push(series[key]);
+                  });
 
                   $('#dailyHistoryChart').highcharts({
                     title: {
