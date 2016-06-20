@@ -155,426 +155,429 @@
 
 
 @section Scripts {
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
 
-    <script>
+  <script>
 
-        $(document).ready(function() {
-            moment.locale('en', {
-                week: { dow: 1 } // Monday is the first day of the week
-            });
+    $(document).ready(function() {
+      moment.locale('en', {
+        week: { dow: 1 } // Monday is the first day of the week
+      });
 
-            /* styling highchart */
-            Highcharts.theme = {
-               /* colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',
-                         '#FF9655', '#FFF263', '#6AF9C4'],*/
-                colors: ['#98E000', // green
-                         '#FEC900', // yellow
-                         '#FF6C39', // orange/red
-                         '#2A97FF'  // blue
-                ], 
-                chart: {
-                    backgroundColor: {
-                        linearGradient: [0, 0, 500, 500],
-                        stops: [
-                            [0, 'rgb(255, 255, 255)'],
-                            [1, 'rgb(255, 255, 255)']
-                        ]
-                    },
-                },
-                title: {
-                    style: {
-                        color: '#333333',
-                        font: 'bold 16px "Montserrat", Verdana, sans-serif'
-                    }
-                },
-                subtitle: {
-                    style: {
-                        color: '#333333',
-                        font: 'bold 12px "Montserrat", Verdana, sans-serif'
-                    }
-                },
+      /* styling highchart */
+      Highcharts.theme = {
+        /* colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',
+                  '#FF9655', '#FFF263', '#6AF9C4'],*/
+        colors: [
+          '#98E000', // green
+          '#FEC900', // yellow
+          '#FF6C39', // orange/red
+          '#2A97FF' // blue
+        ],
+        chart: {
+          backgroundColor: {
+            linearGradient: [0, 0, 500, 500],
+            stops: [
+              [0, 'rgb(255, 255, 255)'],
+              [1, 'rgb(255, 255, 255)']
+            ]
+          },
+        },
+        title: {
+          style: {
+            color: '#333333',
+            font: 'bold 16px "Montserrat", Verdana, sans-serif'
+          }
+        },
+        subtitle: {
+          style: {
+            color: '#333333',
+            font: 'bold 12px "Montserrat", Verdana, sans-serif'
+          }
+        },
 
-                legend: {
-                    itemStyle: {
-                        font: '9pt Montserrat, Verdana, sans-serif',
-                        color: '#333333'
-                    },
-                    itemHoverStyle:{
-                        color: 'gray'
-                    }
+        legend: {
+          itemStyle: {
+            font: '9pt Montserrat, Verdana, sans-serif',
+            color: '#333333'
+          },
+          itemHoverStyle: {
+            color: 'gray'
+          }
+        }
+      };
+
+      // Apply the theme
+      Highcharts.setOptions(Highcharts.theme);
+      Highcharts.setOptions({ global: { useUTC: false } });
+
+      // init datepickers
+      var dayDatepicker = $('#day-datepicker').datepicker({
+        format: "dd-mm-yyyy",
+        autoclose: true,
+        todayBtn: true,
+        endDate: "0d",
+        weekStart: 1
+      });
+      dayDatepicker.on("changeDate", function(e) {
+        updateData(); // update charts on change
+      });
+
+
+      function updateStatus() {
+        $("#lastUpdate").text(moment().day(1).format("HH:mm:ss"));
+
+        $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
+          $("#status").text(data.ActivityType);
+
+          function getStatusColor(s) {
+            switch (s) {
+            case "Standing":
+              return "#98E000";
+            case "Offline":
+              return "#FF6C39";
+            default:
+              return "inherit";
+            }
+          }
+
+          $("#status").css('color', getStatusColor(data.ActivityType));
+
+          //$("#online").toggle(data.Online);
+          //$("#offline").toggle(!data.Online);
+          $("#height").text(data.Height);
+        });
+      }
+
+      function updateData() {
+        var date = dayDatepicker.datepicker("getDate");
+
+        $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
+          var active = data.Standing + data.Sitting;
+          $("#active-time").html(formatTime(active));
+          var standingRatio = active == 0 ? 0 : Math.ceil((data.Standing / active) * 100);
+          $("#standing-time").html(formatTime(data.Standing));
+          $("#standing-ratio").html(standingRatio + "<small> %</small>");
+
+          // http://www.livestrong.com/article/461950-how-many-calories-can-you-burn-daily-just-from-sitting-walking-around-a-house/
+          var sittingCalBurnPerSec = 100 / 3600;
+          // http://www.bbc.com/news/magazine-24532996
+          var standingCalBurnPerSec = (0.7 / 60) + sittingCalBurnPerSec;
+
+          var totalCals = data.Sitting * sittingCalBurnPerSec + data.Standing * standingCalBurnPerSec;
+          var additionalCals = data.Standing * standingCalBurnPerSec - data.Standing * sittingCalBurnPerSec;
+          $("#caloriesToday").text(Math.round(totalCals));
+          $("#additionalCaloriesToday").text(Math.round(additionalCals));
+
+          /* gauge */
+          var standing = data.Standing;
+          var targetStanding = @Model.StandingTarget.TotalSeconds;
+          var standingShare = (standing / targetStanding) * 100;
+          $('#todayGauge').highcharts({
+            chart: {
+              type: 'solidgauge',
+              height: 250
+            },
+
+            title: null,
+
+            pane: {
+              center: ['50%', '85%'],
+              size: '150%',
+              startAngle: -90,
+              endAngle: 90,
+              background: {
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+              }
+            },
+
+            tooltip: {
+              enabled: false
+            },
+
+            // the value axis
+            yAxis: {
+              stops: [
+                [0.1, '#FF6C39'], // red
+                [0.5, '#FEC900'], // yellow
+                [0.9, '#98E000'] // green
+              ],
+              lineWidth: 0,
+              minorTickInterval: null,
+              tickPixelInterval: 400,
+              tickWidth: 0,
+              labels: {
+                y: 16
+              },
+              min: 0,
+              max: standingShare > 100 ? standingShare : 100,
+              title: {
+                text: '',
+                y: 20
+              }
+            },
+
+            plotOptions: {
+              solidgauge: {
+                dataLabels: {
+                  y: 5,
+                  borderWidth: 0,
+                  useHTML: true
                 }
-            };
-
-            // Apply the theme
-            Highcharts.setOptions(Highcharts.theme);
-            Highcharts.setOptions({ global: { useUTC: false } });
-
-            // init datepickers
-            var dayDatepicker = $('#day-datepicker').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayBtn: true,
-                endDate: "0d",
-                weekStart: 1
-            });
-            dayDatepicker.on("changeDate", function(e) {
-                updateData(); // update charts on change
-            });
-
-            
-
-            function updateStatus() {
-                $("#lastUpdate").text(moment().day(1).format("HH:mm:ss"));
-
-                $.getJSON('@Url.Action("GetCurrentStatus", "Api", new {deviceid = Model.DeviceId})', {}, function(data) {
-                  $("#status").text(data.ActivityType);
-
-                  function getStatusColor(s) {
-                    switch (s) {
-                    case "Standing":
-                      return "#98E000";
-                    case "Offline":
-                      return "#FF6C39";
-                    default:
-                      return "inherit";
-                    }
-                  }
-
-                  $("#status").css('color', getStatusColor(data.ActivityType));
-
-                    //$("#online").toggle(data.Online);
-                    //$("#offline").toggle(!data.Online);
-                    $("#height").text(data.Height);
-                });
-            }
-
-            function updateData() {
-                var date = dayDatepicker.datepicker("getDate");
-
-                $.getJSON(buildDateUrl('@Url.Action("GetDayRatio", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
-                    var active= data.Standing + data.Sitting;
-                    $("#active-time").html(formatTime(active));
-                    var standingRatio = active == 0 ? 0 : Math.ceil((data.Standing / active) * 100);
-                    $("#standing-time").html(formatTime(data.Standing));
-                    $("#standing-ratio").html(standingRatio + "<small> %</small>");
-
-                    // http://www.livestrong.com/article/461950-how-many-calories-can-you-burn-daily-just-from-sitting-walking-around-a-house/
-                    var sittingCalBurnPerSec = 100 / 3600;
-                    // http://www.bbc.com/news/magazine-24532996
-                    var standingCalBurnPerSec = (0.7 / 60) + sittingCalBurnPerSec;
-
-                    var totalCals = data.Sitting * sittingCalBurnPerSec + data.Standing * standingCalBurnPerSec;
-                    var additionalCals = data.Standing * standingCalBurnPerSec - data.Standing * sittingCalBurnPerSec;
-                    $("#caloriesToday").text(Math.round(totalCals));
-                    $("#additionalCaloriesToday").text(Math.round(additionalCals));
-
-                    /* gauge */
-                    var standing = data.Standing;
-                    var targetStanding = @Model.StandingTarget.TotalSeconds;
-                    var standingShare = (standing / targetStanding) * 100;
-                    $('#todayGauge').highcharts({
-                        chart: {
-                          type: 'solidgauge',
-                          height: 250
-                        },
-
-                        title: null,
-
-                        pane: {
-                            center: ['50%', '85%'],
-                            size: '150%',
-                            startAngle: -90,
-                            endAngle: 90,
-                            background: {
-                                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
-                                innerRadius: '60%',
-                                outerRadius: '100%',
-                                shape: 'arc'
-                            }
-                        },
-
-                        tooltip: {
-                            enabled: false
-                        },
-
-                        // the value axis
-                        yAxis: {
-                            stops: [
-                              [0.1, '#FF6C39'], // red
-                              [0.5, '#FEC900'], // yellow
-                              [0.9, '#98E000'] // green
-
-                            ],
-                            lineWidth: 0,
-                            minorTickInterval: null,
-                            tickPixelInterval: 400,
-                            tickWidth: 0,
-                            labels: {
-                                y: 16
-                            },
-                            min: 0,
-                            max: standingShare > 100 ? standingShare : 100,
-                            title: {
-                                text: '',
-                                y: 20
-                            }
-                        },
-
-                        plotOptions: {
-                            solidgauge: {
-                                dataLabels: {
-                                    y: 5,
-                                    borderWidth: 0,
-                                    useHTML: true
-                                }
-                            }
-                        },
+              }
+            },
 
 
-                        credits: {
-                            enabled: false
-                        },
+            credits: {
+              enabled: false
+            },
 
-                        series: [
-                          {
-                              name: 'Duration',
-                              data: [standingShare],
-                              dataLabels: {
-                                  format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">'+Math.round(standingShare)+' <small> %</small></span><br/>' +
-                                    '<span style="font-size:12px;color:#4a4a4a">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + ' standing </span></div>'
-                              },
-                              tooltip: {
-                                  valueSuffix: ' %'
-                              }
-                          }
-                        ]
+            series: [
+              {
+                name: 'Duration',
+                data: [standingShare],
+                dataLabels: {
+                  format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' + Math.round(standingShare) + ' <small> %</small></span><br/>' +
+                    '<span style="font-size:12px;color:#4a4a4a">' + formatTime(standing) + ' of ' + formatTime(targetStanding) + ' standing </span></div>'
+                },
+                tooltip: {
+                  valueSuffix: ' %'
+                }
+              }
+            ]
 
-                    });
-                    /* ratio */
-                    var arr = new Array();
-                    arr[0] = ['Standing', data.Standing];
-                    arr[1] = ['Sitting', data.Sitting];
-                    arr[2] = ['Inactive', data.Inactive];
+          });
+          /* ratio */
+          var arr = new Array();
+          arr[0] = ['Standing', data.Standing];
+          arr[1] = ['Sitting', data.Sitting];
+          arr[2] = ['Inactive', data.Inactive];
 
-                    var chart = {
-                        title: {
-                            text: ''
-                        },
-                        //legend: {
-                        //  enabled: true
-                        //},
-                        exporting: {
-                            enabled: false
-                        },
-                        chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: 0,
-                            plotShadow: false,
-                            height: 250
-                        },
-                        plotOptions: {
-                            pie: {
-                                startAngle: -90,
-                                endAngle: 90,
-                                center: ['50%', '100%'],
-                                dataLabels: { enabled: false },
-                                showInLegend: true,
-                                size: '200%'
-                            }
-                        },
-                        tooltip: {
-                            formatter: function() {
-                                return '<b>' + formatTime(this.y) + '</b>' ;
-                            }
-                        },
-                        series: [
-                          {
-                              type: 'pie',
-                              name: 'Share',
-                              innerSize: '50%',
-                              data: arr
-                          }
-                        ]
-                    };
-                    $('#dailyRatioChart').highcharts(chart);
-
-
-                });
-
-                /* history */
-                $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
-                  //$("#dayHistory").text(JSON.stringify(data));
-
-                  var nrOfStands = 0;
-                  var longestStand = 0;
-                  var durationLookup = new Array();
-                  var series = [];
-                  for (var i = 0; i < data.length; i++) {
-                    var activityType = data[i].ActivityType;
-                    if (series[activityType] === undefined)
-                      series[activityType] = { name: activityType, data: new Array() };
-                    var start = Date.parse(data[i].StartDate);
-                    var end = Date.parse(data[i].EndDate);
-                    var duration = (end - start) / 1000; // sec
-                    durationLookup[start] = formatTime(duration);
-                    series[activityType].data.push([start, 1]);
-                    series[activityType].data.push([end, 1]);
-                    series[activityType].data.push([end, null]);
-                    if (activityType === 'Standing') {
-                      nrOfStands++;
-                      if (duration > longestStand)
-                        longestStand = duration;
-                    }
-                  }
-
-                  $("#nrOfStands").text(nrOfStands);
-                  $("#longestStand").html(formatTime(longestStand));
-
-                  var seriesArray = [];
-                  [ "Standing", "Sitting", "Inactive" ].forEach(function(key) {
-                    if (series[key] !== undefined) seriesArray.push(series[key]);
-                  });
-
-                  $('#dailyHistoryChart').highcharts({
-                    title: {
-                      text: 'History',
-                      margin: 0,
-                      align: "left"
-                    },
-                    chart: {
-                      type: 'area',
-                      height: 97,
-                      spacingBottom: 0,
-                      marginTop: 0
-                    },
-                    exporting: {
-                      enabled: false
-                    },
-
-                    tooltip: {
-                      formatter: function() {
-                        return "<strong>" + this.series.name + "</strong><br>" + durationLookup[this.x];
-                      }
-                    },
-                    xAxis: {
-                      type: 'datetime',
-                      tickPixelInterval: 150
-                      //lineWidth: 0,
-                      //minorGridLineWidth: 0,
-                      //lineColor: 'transparent',
-                      //labels: { enabled: false },
-                      //minorTickLength: 0,
-                      //tickLength: 0
-                    },
-                    yAxis: {
-                      title: '',
-                      lineWidth: 0,
-                      gridLineWidth: 0,
-                      minorGridLineWidth: 0,
-                      lineColor: 'transparent',
-                      labels: { enabled: false },
-                      minorTickLength: 0,
-                      tickLength: 0
-                    },
-                    plotOptions: {
-                      area: {
-                        lineWidth: 0,
-                        marker: {
-                          enabled: false,
-                          states: {
-                            hover: {
-                              enabled: false
-                            }
-                          }
-                        }
-                      }
-                    },
-                    legend: {
-                      enabled: false
-                    },
-                    series: seriesArray
-                  });
-
-                });
-
-                /* weekly data */
+          var chart = {
+            title: {
+              text: ''
+            },
+            //legend: {
+            //  enabled: true
+            //},
+            exporting: {
+              enabled: false
+            },
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: 0,
+              plotShadow: false,
+              height: 250
+            },
+            plotOptions: {
+              pie: {
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '100%'],
+                dataLabels: { enabled: false },
+                showInLegend: true,
+                size: '200%'
+              }
+            },
+            tooltip: {
+              formatter: function() {
+                return '<b>' + formatTime(this.y) + '</b>';
+              }
+            },
+            series: [
+              {
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: arr
+              }
+            ]
+          };
+          $('#dailyRatioChart').highcharts(chart);
 
 
-                var firstDate = moment(date).day(1).format("DD-MM-YYYY");
-                var lastDate = moment(date).day(7).format("DD-MM-YYYY");
-                $("#week").text(firstDate + " - " + lastDate);
-                $.getJSON(buildDateUrl('@Url.Action("GetWeekRatio", "Api", new {year = "year", week = "week", deviceid = Model.DeviceId})', date), {}, function(data) {
-
-                    // NOTE: multiplication/division by 60 is done the reach even numbers in hh:mm
-                    var standingData = new Array();
-                    var sittingData = new Array();
-                    var inactiveData = new Array();
-                    for (var i = 0; i < data.length; i++) {
-                        standingData.push(data[i].Standing/60);
-                        sittingData.push(data[i].Sitting/60);
-                        inactiveData.push(data[i].Inactive/60);
-                    }
-                    var weekSeries = new Array();
-                    weekSeries.push({ name: 'Standing', data: standingData });
-                    weekSeries.push({ name: 'Sitting', data: sittingData });
-                    weekSeries.push({ name: 'Inactive', data: inactiveData });
-
-                    $('#weeklyRatioChart').highcharts({
-                        chart: {
-                          type: 'column',
-                          height: 250
-                        },
-                        title: {
-                            text: ''
-                        },
-                        yAxis: {
-                            title: '',
-                            labels: {
-                                formatter: function() {
-                                    return formatTime(this.value*60) ;
-                                }
-                            }
-                        },
-                        xAxis: {
-                            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                        },
-                        plotOptions: {
-                            column: {
-                                stacking: 'normal'
-                            }
-                        },
-                        tooltip: {
-                            formatter: function() {
-                                return '<b>'+this.series.name +'</b> on <b>' + this.x + '</b> : <b>' + formatTime(this.y*60) + '</b>' ;
-                            }
-                        },
-                        series: weekSeries
-                    });
-                });
-
-            }
-
-
-            setInterval(function() {
-                updateStatus();
-                // todo - only update data when it's the current day/week
-                updateData();
-            }, 30000);
-
-            updateData();
-            updateStatus();
-
-            function buildDateUrl(url, date) {
-                return url.replace("year", date.getFullYear()).replace("month", (date.getMonth() + 1)).replace("day", date.getDate()).replace("week", date.getWeek() - 1);
-            }
         });
 
-    </script>
+        /* history */
+        $.getJSON(buildDateUrl('@Url.Action("GetDayHistory", "Api", new {year = "year", month = "month", day = "day", deviceid = Model.DeviceId})', date), {}, function(data) {
+          //$("#dayHistory").text(JSON.stringify(data));
+
+          var nrOfStands = 0;
+          var longestStand = 0;
+          var durationLookup = new Array();
+          var series = [];
+          for (var i = 0; i < data.length; i++) {
+            var activityType = data[i].ActivityType;
+            if (series[activityType] === undefined)
+              series[activityType] = { name: activityType, data: new Array() };
+            var start = Date.parse(data[i].StartDate);
+            var end = Date.parse(data[i].EndDate);
+            var duration = (end - start) / 1000; // sec
+            durationLookup[start] = formatTime(duration);
+            series[activityType].data.push([start, 1]);
+            series[activityType].data.push([end, 1]);
+            series[activityType].data.push([end, null]);
+            if (activityType === 'Standing') {
+              nrOfStands++;
+              if (duration > longestStand)
+                longestStand = duration;
+            }
+          }
+
+          $("#nrOfStands").text(nrOfStands);
+          $("#longestStand").html(formatTime(longestStand));
+
+          var seriesArray = [];
+          ["Standing", "Sitting", "Inactive"].forEach(function(key) {
+
+            if (series[key] !== undefined)
+              seriesArray.push(series[key]);
+            else
+              seriesArray.push({ name: key, data: [] });
+          });
+
+          $('#dailyHistoryChart').highcharts({
+            title: {
+              text: 'History',
+              margin: 0,
+              align: "left"
+            },
+            chart: {
+              type: 'area',
+              height: 97,
+              spacingBottom: 0,
+              marginTop: 0
+            },
+            exporting: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter: function() {
+                return "<strong>" + this.series.name + "</strong><br>" + durationLookup[this.x];
+              }
+            },
+            xAxis: {
+              type: 'datetime',
+              tickPixelInterval: 150
+              //lineWidth: 0,
+              //minorGridLineWidth: 0,
+              //lineColor: 'transparent',
+              //labels: { enabled: false },
+              //minorTickLength: 0,
+              //tickLength: 0
+            },
+            yAxis: {
+              title: '',
+              lineWidth: 0,
+              gridLineWidth: 0,
+              minorGridLineWidth: 0,
+              lineColor: 'transparent',
+              labels: { enabled: false },
+              minorTickLength: 0,
+              tickLength: 0
+            },
+            plotOptions: {
+              area: {
+                lineWidth: 0,
+                marker: {
+                  enabled: false,
+                  states: {
+                    hover: {
+                      enabled: false
+                    }
+                  }
+                }
+              }
+            },
+            legend: {
+              enabled: false
+            },
+            series: seriesArray
+          });
+
+        });
+
+        /* weekly data */
+
+
+        var firstDate = moment(date).day(1).format("DD-MM-YYYY");
+        var lastDate = moment(date).day(7).format("DD-MM-YYYY");
+        $("#week").text(firstDate + " - " + lastDate);
+        $.getJSON(buildDateUrl('@Url.Action("GetWeekRatio", "Api", new {year = "year", week = "week", deviceid = Model.DeviceId})', date), {}, function(data) {
+
+          // NOTE: multiplication/division by 60 is done the reach even numbers in hh:mm
+          var standingData = new Array();
+          var sittingData = new Array();
+          var inactiveData = new Array();
+          for (var i = 0; i < data.length; i++) {
+            standingData.push(data[i].Standing / 60);
+            sittingData.push(data[i].Sitting / 60);
+            inactiveData.push(data[i].Inactive / 60);
+          }
+          var weekSeries = new Array();
+          weekSeries.push({ name: 'Standing', data: standingData });
+          weekSeries.push({ name: 'Sitting', data: sittingData });
+          weekSeries.push({ name: 'Inactive', data: inactiveData });
+
+          $('#weeklyRatioChart').highcharts({
+            chart: {
+              type: 'column',
+              height: 250
+            },
+            title: {
+              text: ''
+            },
+            yAxis: {
+              title: '',
+              labels: {
+                formatter: function() {
+                  return formatTime(this.value * 60);
+                }
+              }
+            },
+            xAxis: {
+              categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            plotOptions: {
+              column: {
+                stacking: 'normal'
+              }
+            },
+            tooltip: {
+              formatter: function() {
+                return '<b>' + this.series.name + '</b> on <b>' + this.x + '</b> : <b>' + formatTime(this.y * 60) + '</b>';
+              }
+            },
+            series: weekSeries
+          });
+        });
+
+      }
+
+
+      setInterval(function() {
+        updateStatus();
+        // todo - only update data when it's the current day/week
+        updateData();
+      }, 30000);
+
+      updateData();
+      updateStatus();
+
+      function buildDateUrl(url, date) {
+        return url.replace("year", date.getFullYear()).replace("month", (date.getMonth() + 1)).replace("day", date.getDate()).replace("week", date.getWeek() - 1);
+      }
+    });
+
+  </script>
 }
