@@ -30,8 +30,8 @@ namespace SimulatedDevice {
 
       //Foo().GetAwaiter().GetResult();
 
-      SendDeviceToCloudMessagesAsync();
-      //Foo();
+      //SendDeviceToCloudMessagesAsync();
+      Foo().GetAwaiter().GetResult();
       Console.WriteLine("done");
 
 
@@ -43,8 +43,8 @@ namespace SimulatedDevice {
     }
 
     private static async Task Foo() {
-      var standing = 100;
-      var sitting = 50;
+      var standing = 120;
+      var sitting = 75;
 
       TimeSpan now;
 
