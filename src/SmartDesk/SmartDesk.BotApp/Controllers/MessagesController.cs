@@ -23,7 +23,7 @@ namespace SmartDesk.BotApp {
       if (message.Type != "Message") return HandleSystemMessage(message);
       switch (message.Text) {
         case "my address?":
-          return message.CreateReplyMessage($"{message.To.Address}, {message.To.Id}");
+          return message.CreateReplyMessage($"{message.From.Address}, {message.From.Id}");
         case "how long i'm standing?":
           return message.CreateReplyMessage("not long enough!");
         case "today?":
