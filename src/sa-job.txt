@@ -1,0 +1,106 @@
+WITH 
+categorizedEvents AS (
+    SELECT
+        inputstream.DeviceId,
+        inputstream.[Timestamp],
+        CASE WHEN RefDev.Height IS NULL AND inputstream.height > 100.0 THEN 1
+             WHEN inputstream.Height > RefDev.Height THEN 1
+             ELSE 0
+        END as Standing,
+        inputstream.IsActive,
+        1 as IsOnline,
+        inputstream.Height,
+        RefDev.Height as HeightThreshold
+    FROM inputstream TIMESTAMP BY inputstream.[Timestamp]
+    LEFT JOIN Devices RefDev ON inputstream.DeviceId = RefDev.DeviceId
+),
+OfflineTick AS (
+    SELECT COUNT(*) AS c
+    FROM inputstream TIMESTAMP BY inputstream.[Timestamp]
+    GROUP BY TumblingWindow(s, 90) -- event should occur every minute. if there is no event for 90s the device is considered being offline.
+),
+AllDevices AS (
+    SELECT Devices.deviceId
+    FROM OfflineTick JOIN Devices
+    ON OfflineTick.c - OfflineTick.c = Devices.deviceId - Devices.deviceId
+),
+ActualCounts AS (
+    SELECT deviceId, System.Timestamp as [Timestamp], COUNT(*) AS eventCount 
+    FROM inputstream TIMESTAMP BY inputstream.[Timestamp]
+    GROUP BY TumblingWindow(s, 90), deviceId
+),
+OfflineEvents AS (
+    SELECT AllDevices.deviceId,
+           System.Timestamp as [Timestamp],
+           0 AS standing,
+           0 AS isactive,
+           0 AS isonline,
+           0 AS Height,
+           0 AS HeightThreshold
+           FROM AllDevices LEFT JOIN ActualCounts
+           ON ActualCounts.deviceId = AllDevices.deviceId AND DATEDIFF(ms, ActualCounts, AllDevices) = 0
+           WHERE ActualCounts.eventCount IS NULL
+),
+categorizedWithOffline AS (
+    SELECT * FROM categorizedEvents
+    UNION
+    SELECT * FROM OfflineEvents
+),
+changesQ AS (
+    SELECT *
+    FROM categorizedWithOffline
+    WHERE LAG(IsActive) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) IS NULL OR -- replace this condition if offline detections yield a constant offline interval
+          LAG(IsActive) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) <> IsActive OR
+          LAG(Standing) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) <> Standing OR
+          LAG(IsOnline) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) <> IsOnline
+),
+durationsQ AS (
+    SELECT 
+        DeviceId,
+        LAST(timestamp) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) AS StartDate,
+        Timestamp as EndDate,
+        DATEDIFF(s, LAG(timestamp) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)), Timestamp) as Duration,
+        LAST(Standing) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) AS Standing,
+        LAST(IsActive) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) AS IsActive
+    FROM categorizedEvents
+    WHERE LAG(timestamp) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) IS NOT NULL
+)
+--eventWithPrev AS (
+--    SELECT
+--        *,
+--        LAG(*) OVER (PARTITION BY DeviceId LIMIT DURATION(minute, 2)) as Previous
+--    FROM categorized
+--),
+--periodchange AS (
+--    SELECT
+--        DeviceId,
+--        Timestamp,
+--        Standing,
+--        IsActive,
+--        Previous
+--    FROM eventWithPrev
+--    WHERE Previous.Standing <> Standing OR
+--          Previous.IsActive <> IsActive  
+--)
+
+-- DeviceId 2 is just the tick that keeps the offline detection alive. We don't persist those events.
+
+-- raw events
+SELECT *
+INTO rawevents
+FROM inputstream TIMESTAMP BY inputstream.[Timestamp]
+WHERE inputstream.DeviceId <> 2;
+
+SELECT *
+INTO durations
+FROM durationsQ
+WHERE DeviceId <> 2;
+
+SELECT * 
+INTO changes
+FROM changesQ
+WHERE DeviceId <> 2;
+
+SELECT DeviceId, 'LastEvent' as Type, Standing, IsActive, IsOnline, Height, [Timestamp]
+INTO deviceunique
+FROM categorizedWithOffline;
